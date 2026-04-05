@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   FileCode2,
   Box,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Scale
 } from "lucide-react";
 
 export default function TokenizationEngine() {
@@ -110,7 +111,11 @@ export default function TokenizationEngine() {
                    </div>
                  </div>
                  
-                 <div className="w-full sm:w-auto">
+                 <div className="w-full sm:w-auto mt-4 sm:mt-0 flex flex-col gap-2">
+                    <div className="text-[10px] text-gray-500 font-mono text-right flex items-center justify-end gap-1">
+                       <Scale className="w-3 h-3 text-[#c5a059]" />
+                       <span>eWpG BaFin Compliant &sect;2</span>
+                    </div>
                     <button 
                       onClick={startDeployment}
                       disabled={deployStep > 0}
@@ -118,6 +123,36 @@ export default function TokenizationEngine() {
                     >
                       {deployStep > 0 ? "Deploying..." : "Mint & Deploy 🚀"}
                     </button>
+                 </div>
+               </div>
+
+               {/* Legal to Tech Mapping USP */}
+               <div className="mt-8 border-t border-[#064e3b] pt-6 relative z-10">
+                 <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                   <Scale className="w-5 h-5 text-[#c5a059]" /> Legal-To-Node Mapping (USP)
+                 </h3>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-[#022c22] border border-[#064e3b] rounded-xl p-4">
+                       <div className="text-xs text-gray-400 font-bold mb-2 uppercase tracking-wider">Juristische Struktur (BaFin)</div>
+                       <ul className="text-sm text-gray-300 space-y-2">
+                         <li className="flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-green-400" /> Zweckgesellschaft (SPV) gegründet</li>
+                         <li className="flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-green-400" /> Emission von Genussrechten nach eWpG</li>
+                         <li className="flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-green-400" /> Basis-Informationsblatt (BIB) hinterlegt</li>
+                       </ul>
+                    </div>
+                    <div className="flex items-center justify-center -m-5 relative z-20">
+                       <div className="bg-[#c5a059] p-1.5 rounded-full shadow-[0_0_15px_rgba(197,160,89,0.3)] hidden md:block">
+                         <ArrowRightLeft className="w-4 h-4 text-[#022c22]" />
+                       </div>
+                    </div>
+                    <div className="bg-[#022c22] border border-[#064e3b] rounded-xl p-4">
+                       <div className="text-xs text-gray-400 font-bold mb-2 uppercase tracking-wider">Blockchain Struktur (ERC-3643)</div>
+                       <ul className="text-sm text-gray-300 space-y-2">
+                         <li className="flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-blue-400" /> Smart Contract T-Rex Standard</li>
+                         <li className="flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-blue-400" /> On-Chain Identity Registry gebunden</li>
+                         <li className="flex gap-2 items-center"><CheckCircle2 className="w-4 h-4 text-blue-400" /> Compliance Module Enforcement Auth</li>
+                       </ul>
+                    </div>
                  </div>
                </div>
 

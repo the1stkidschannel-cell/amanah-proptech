@@ -20,7 +20,8 @@ import {
   GraduationCap,
   Gift,
   BriefcaseBusiness,
-  Cpu
+  Cpu,
+  Mail
 } from "lucide-react";
 
 const navItems = [
@@ -28,6 +29,7 @@ const navItems = [
   { label: "Primärmarkt", href: "/invest", icon: Building2 },
   { label: "Sekundärmarkt", href: "/trade", icon: ArrowLeftRight },
   { label: "Halal Wallet", href: "/wallet", icon: Wallet },
+  { label: "B2B Outreach", href: "/admin/outreach", icon: Mail },
   { label: "Freunde werben", href: "/referral", icon: Gift },
   { label: "Institutionell", href: "/institutional", icon: BriefcaseBusiness },
   { label: "Amanah Academy", href: "/academy", icon: GraduationCap },
