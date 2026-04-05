@@ -1,8 +1,20 @@
 "use client";
 
-import { Wallet, ArrowUpRight, ArrowDownLeft, Copy, CheckCircle, PieChart as PieChartIcon, TrendingUp, DollarSign } from "lucide-react";
+import { Wallet, ArrowUpRight, ArrowDownLeft, Copy, CheckCircle, PieChart as PieChartIcon, TrendingUp, DollarSign, Globe, CreditCard, X } from "lucide-react";
 import { useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
+
+const exchangeRates: Record<string, number> = {
+  "EUR": 1,
+  "USD": 1.08,
+  "AED": 3.97
+};
+
+const currencySymbols: Record<string, string> = {
+  "EUR": "€",
+  "USD": "$",
+  "AED": "د.إ"
+};
 
 const tokenHoldings = [
   { name: "Rhein-Ruhr Token", symbol: "RRT", amount: 50, value: 5125, changePercent: +2.5 },
@@ -23,13 +35,38 @@ const pieData = [
 
 export default function WalletPage() {
   const [copied, setCopied] = useState(false);
+  const [currency, setCurrency] = useState<"EUR" | "USD" | "AED">("EUR");
+  const [showDeposit, setShowDeposit] = useState(false);
+  const [depositAmount, setDepositAmount] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const walletAddress = "0xAm4n4h…3B7f";
-  const totalValue = tokenHoldings.reduce((s, t) => s + t.value, 0) + 1250; // Plus Fiat balance
+  const baseFiatEUR = 1250;
+  const tokenValueEUR = tokenHoldings.reduce((s, t) => s + t.value, 0);
+
+  const formatCurrency = (amountInEUR: number) => {
+    const converted = amountInEUR * exchangeRates[currency];
+    return new Intl.NumberFormat(currency === "USD" ? "en-US" : currency === "AED" ? "ar-AE" : "de-DE", {
+      style: "currency",
+      currency: currency,
+      maximumFractionDigits: 2
+    }).format(converted);
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText("0xAm4n4hPr0pT3ch000000000000003B7f");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDeposit = () => {
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      setShowDeposit(false);
+      setDepositAmount("");
+      // Logic would go here to update backend
+    }, 2500);
   };
 
   return (
@@ -50,8 +87,19 @@ export default function WalletPage() {
           
           <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>
-              <p className="text-sm text-gray-300 font-medium uppercase tracking-wider mb-2">Gesamtes Krypto-Vermögen</p>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">{new Intl.NumberFormat("de-DE").format(totalValue)} €</h2>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-sm text-gray-300 font-medium uppercase tracking-wider">Gesamtes Krypto-Vermögen</span>
+                <select 
+                  value={currency} 
+                  onChange={(e) => setCurrency(e.target.value as any)}
+                  className="bg-[#022c22] border border-[#064e3b] text-gray-300 text-xs rounded-md px-2 py-1 outline-none focus:border-[#c5a059]"
+                >
+                  <option value="EUR">EUR (€)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="AED">AED (د.إ)</option>
+                </select>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">{formatCurrency(tokenValueEUR + baseFiatEUR)}</h2>
               <div className="flex items-center space-x-2 text-sm">
                 <span className="bg-green-500/20 text-green-400 px-2 py-0.5 rounded font-medium flex items-center"><ArrowUpRight className="w-3 h-3 mr-1"/> +4.8%</span>
                 <span className="text-gray-400">All-Time Return</span>
@@ -75,18 +123,18 @@ export default function WalletPage() {
           <div className="relative z-10 grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-white/10">
             <div>
               <p className="text-xs text-gray-400">Verfügbares Fiat</p>
-              <p className="text-xl font-bold text-white">1.250,00 €</p>
+              <p className="text-xl font-bold text-white">{formatCurrency(baseFiatEUR)}</p>
             </div>
             <div>
               <p className="text-xs text-gray-400">Token-Wert</p>
-              <p className="text-xl font-bold text-[#c5a059]">8.155,00 €</p>
+              <p className="text-xl font-bold text-[#c5a059]">{formatCurrency(tokenValueEUR)}</p>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="lg:col-span-1 flex flex-col gap-4 justify-center">
-          <button className="w-full bg-[#c5a059] hover:bg-[#b08d48] text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+          <button onClick={() => setShowDeposit(true)} className="w-full bg-[#c5a059] hover:bg-[#b08d48] text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
             <ArrowDownLeft className="w-5 h-5" /> <span>Guthaben aufladen</span>
           </button>
           <button className="w-full bg-[#03362a] border border-[#064e3b] hover:bg-[#064e3b]/50 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
@@ -150,7 +198,7 @@ export default function WalletPage() {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-base font-bold text-white">{new Intl.NumberFormat("de-DE").format(t.value)} €</p>
+                  <p className="text-base font-bold text-white">{formatCurrency(t.value)}</p>
                   <p className={`text-sm font-medium ${t.changePercent >= 0 ? "text-green-400" : "text-red-400"}`}>
                     {t.changePercent >= 0 ? "+" : ""}{t.changePercent.toFixed(1)} % ROI
                   </p>
@@ -191,6 +239,62 @@ export default function WalletPage() {
           ))}
         </div>
       </div>
+
+      {/* Stripe Deposit Modal (Mock) */}
+      {showDeposit && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#022c22] border border-[#064e3b] rounded-2xl w-full max-w-md overflow-hidden shadow-2xl relative animate-fade-in-up">
+            <div className="p-6 border-b border-[#064e3b] flex items-center justify-between">
+               <h3 className="text-lg font-bold text-white flex items-center gap-2"><CreditCard className="w-5 h-5 text-[#c5a059]" /> Einzahlung vornehmen</h3>
+               <button onClick={() => setShowDeposit(false)} className="text-gray-400 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+               </button>
+            </div>
+            
+            <div className="p-6 space-y-5">
+               <div className="bg-[#03362a] p-4 rounded-xl border border-[#064e3b]/50">
+                  <p className="text-xs text-gray-400 mb-1">Einzuzahlender Betrag ({currency})</p>
+                  <div className="flex items-center gap-3">
+                     <span className="text-2xl text-gray-500 font-light">{currencySymbols[currency]}</span>
+                     <input 
+                       type="number" 
+                       value={depositAmount} 
+                       onChange={(e) => setDepositAmount(e.target.value)} 
+                       placeholder="10000"
+                       className="w-full bg-transparent text-3xl font-bold text-white outline-none placeholder-gray-600"
+                       autoFocus
+                     />
+                  </div>
+               </div>
+               
+               <div className="space-y-3">
+                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Zahlungsmethode (Stripe)</p>
+                 <button className="w-full flex items-center justify-between p-4 rounded-xl border border-[#c5a059]/50 bg-[#c5a059]/10">
+                    <span className="text-white font-medium flex items-center gap-3"><Globe className="w-5 h-5 text-[#c5a059]"/> Bank Wire (SWIFT / SEPA)</span>
+                    <CheckCircle className="w-5 h-5 text-[#c5a059]" />
+                 </button>
+               </div>
+
+               <p className="text-xs text-gray-500 text-center">Ihre Gelder werden treuhänderisch bei unserem BaFin-lizensierten Partner (Mangopay/Stripe) nach eWpG-Standards verwahrt.</p>
+            </div>
+
+            <div className="p-6 border-t border-[#064e3b] bg-[#03362a]/50">
+               <button 
+                  onClick={handleDeposit}
+                  disabled={!depositAmount || isProcessing}
+                  className="w-full bg-green-500 hover:bg-green-600 disabled:opacity-50 text-[#022c22] font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2"
+               >
+                 {isProcessing ? (
+                   <><span className="w-4 h-4 border-2 border-[#022c22] border-t-transparent rounded-full animate-spin"></span> Processing...</>
+                 ) : (
+                   <>Betrag einzahlen</>
+                 )}
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
