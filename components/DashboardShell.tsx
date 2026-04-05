@@ -21,7 +21,8 @@ import {
   Gift,
   BriefcaseBusiness,
   Cpu,
-  Mail
+  Mail,
+  Bot
 } from "lucide-react";
 
 const navItems = [
@@ -37,6 +38,7 @@ const navItems = [
   { label: "Sharia AI", href: "/compliance", icon: ShieldCheck },
   { label: "Token Factory", href: "/admin/properties/create", icon: Cpu },
   { label: "SaaS Pricing", href: "/pricing", icon: BadgeDollarSign },
+  { label: "Portfolio Automation", href: "/admin/automation", icon: Bot },
   { label: "Admin", href: "/admin", icon: Settings },
 ];
 
