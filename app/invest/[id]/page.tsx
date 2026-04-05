@@ -24,6 +24,8 @@ import {
   ChevronUp,
   Info,
   Wallet,
+  ExternalLink,
+  Database
 } from "lucide-react";
 import { getPropertyById } from "@/lib/properties";
 
@@ -55,13 +57,28 @@ export default function PropertyDetailPage() {
   const monthlyReturn = Math.round(annualReturn / 12);
   const ownershipPercent = ((investAmount / property.targetVolume) * 100).toFixed(3);
 
-  const handleInvest = () => {
+  const handleInvest = async () => {
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/tokenize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          propertyId: property.id,
+          propertyName: property.name,
+          amount: tokensForAmount, 
+          investorAddress: "0xAm4n4hPr0pT3chDemoUser123" 
+        }),
+      });
+      const data = await res.json();
+      
       setLoading(false);
-      setToast(`Alhamdulillah! ${new Intl.NumberFormat("de-DE").format(investAmount)} € in ${property.name} investiert. ${tokensForAmount} ${property.tokenSymbol}-Token wurden Ihrem Wallet gutgeschrieben.`);
-      setTimeout(() => setToast(""), 5000);
-    }, 2000);
+      setToast(`Alhamdulillah! ${tokensForAmount} ${property.tokenSymbol}-Token gemintet. Tx: ${data.onChainTx?.substring(0, 10)}...`);
+      setTimeout(() => setToast(""), 6000);
+    } catch (e) {
+      setLoading(false);
+      setToast("Fehler bei der Krypto-Übertragung.");
+    }
   };
 
   const docTypeIcons = {
@@ -245,6 +262,41 @@ export default function PropertyDetailPage() {
                 <span>{showAllDocs ? "Weniger anzeigen" : `Alle ${property.documents.length} Dokumente anzeigen`}</span>
               </button>
             )}
+          </div>
+
+          {/* Blockchain & Security Proof */}
+          <div className="bg-[#03362a] border border-[#c5a059]/40 rounded-xl p-6 relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-48 h-48 bg-[#c5a059]/5 blur-[80px] rounded-full pointer-events-none" />
+             <div className="flex items-center space-x-2 mb-4 relative z-10">
+               <Database className="w-5 h-5 text-[#c5a059]" />
+               <h2 className="text-lg font-bold text-white">Blockchain-Transparenz (eWpG)</h2>
+             </div>
+             
+             <p className="text-sm text-gray-300 mb-6 relative z-10 leading-relaxed">
+               Ihr Investment ist zu 100% On-Chain verifizierbar und insolvenzsicher in der Zweckgesellschaft (SPV) verankert. Die BaFin-konformen Anleihebedingungen sind unveränderlich als Datei-Hash (IPFS) auf dem Smart Contract verewigt.
+             </p>
+             
+             <div className="space-y-4 relative z-10">
+                <div className="bg-[#022c22] rounded-lg p-4 border border-[#064e3b]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                   <div>
+                     <p className="text-xs text-green-400 font-semibold mb-1 uppercase tracking-wider">ERC-3643 Smart Contract</p>
+                     <p className="text-sm font-mono text-white">0x9E7a...4fB2 (Polygon POS)</p>
+                   </div>
+                   <button className="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs font-medium transition-colors bg-[#03362a] px-3 py-2 rounded-md border border-[#064e3b]">
+                     <ExternalLink className="w-3.5 h-3.5" /> Auf Polygonscan prüfen
+                   </button>
+                </div>
+                
+                <div className="bg-[#022c22] rounded-lg p-4 border border-[#064e3b]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                   <div>
+                     <p className="text-xs text-[#c5a059] font-semibold mb-1 uppercase tracking-wider">IPFS Metadaten (Basisinformationsblatt)</p>
+                     <p className="text-sm font-mono text-white tracking-tight">QmXrEwG9p8Y...Zp2xL</p>
+                   </div>
+                   <button className="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs font-medium transition-colors bg-[#03362a] px-3 py-2 rounded-md border border-[#064e3b]">
+                     <ExternalLink className="w-3.5 h-3.5" /> Dokumenten-Hash laden
+                   </button>
+                </div>
+             </div>
           </div>
         </div>
 
