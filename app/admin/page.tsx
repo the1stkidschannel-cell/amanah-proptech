@@ -20,6 +20,11 @@ import {
   Eye,
   BarChart3,
   ArrowUpRight,
+  Sparkles,
+  Search,
+  Bot,
+  Link as LinkIcon,
+  ChevronRight
 } from "lucide-react";
 
 interface WaitlistEntry {
@@ -42,7 +47,12 @@ export default function AdminPage() {
   const { user } = useAuth();
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [audits, setAudits] = useState<AuditEntry[]>([]);
-  const [activeTab, setActiveTab] = useState<"overview" | "waitlist" | "audits" | "properties">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "waitlist" | "audits" | "properties" | "sourcing">("overview");
+  
+  // AI Sourcing State
+  const [dealUrl, setDealUrl] = useState("");
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [aiReport, setAiReport] = useState<any>(null);
 
   // Demo data for when Firebase isn't configured
   const demoWaitlist: WaitlistEntry[] = [
@@ -102,10 +112,29 @@ export default function AdminPage() {
 
   const tabs = [
     { id: "overview" as const, label: "Übersicht", icon: LayoutDashboard },
+    { id: "sourcing" as const, label: "AI Sourcing", icon: Sparkles },
     { id: "waitlist" as const, label: `Waitlist (${waitlist.length})`, icon: Users },
     { id: "audits" as const, label: `Audits (${audits.length})`, icon: ShieldCheck },
     { id: "properties" as const, label: "Objekte", icon: Building2 },
   ];
+
+  const handleAiEvaluation = () => {
+    if (!dealUrl) return;
+    setIsEvaluating(true);
+    // Simulate complex AI underwriting process
+    setTimeout(() => {
+      setAiReport({
+        score: 92,
+        title: "Logistikpark Hannover-Messe",
+        volume: "18.500.000 €",
+        irr: "7,8%",
+        shariaCheck: "Pass",
+        flags: ["Keine Alkohol-Gewerbemieter", "Zinsfreies Verkäuferdarlehen möglich", "ESG-Klasse A"],
+        verdict: "Strong Buy - Ready for Tokenization"
+      });
+      setIsEvaluating(false);
+    }, 2800);
+  };
 
   return (
     <div className="space-y-8 animate-fade-in-up">
@@ -368,6 +397,125 @@ export default function AdminPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* AI Sourcing Tab */}
+      {activeTab === "sourcing" && (
+        <div className="space-y-6">
+          <div className="bg-gradient-to-br from-[#03362a] to-[#022c22] border border-[#064e3b] rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            {/* Background design */}
+            <div className="absolute top-0 right-0 -mr-16 -mt-16 bg-[#c5a059]/5 w-64 h-64 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="text-xl font-bold text-white flex items-center space-x-2">
+                  <Sparkles className="w-6 h-6 text-[#c5a059]" />
+                  <span>Sharia AI Deal Underwriting</span>
+                </h2>
+                <p className="text-sm text-gray-400 mt-2 max-w-2xl">
+                  Unser neuronales KI-Modell liest Exposés, bewertet die Makro- und Mikrolage, führt einen regulatorischen Sharia-Screening-Prozess durch und kalkuliert die IRR-Netto-Rendite für Investoren &mdash; vollautomatisiert.
+                </p>
+              </div>
+              <div className="hidden sm:flex bg-[#064e3b]/30 text-green-400 border border-green-500/20 px-3 py-1.5 rounded-lg items-center space-x-2 text-xs font-mono">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
+                <span>LLM Engine Active</span>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-grow">
+                <LinkIcon className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+                <input 
+                  type="text" 
+                  value={dealUrl}
+                  onChange={(e) => setDealUrl(e.target.value)}
+                  placeholder="ImmoScout24 Link / PDF Exposé URL einfügen..."
+                  className="w-full bg-[#064e3b]/20 border border-[#064e3b] rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#c5a059]/50 transition-all"
+                />
+              </div>
+              <button 
+                onClick={handleAiEvaluation}
+                disabled={!dealUrl || isEvaluating}
+                className="bg-[#c5a059] hover:bg-[#d4af37] disabled:opacity-50 text-[#022c22] font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-[#c5a059]/20 tracking-wide flex items-center justify-center min-w-[200px]"
+              >
+                {isEvaluating ? (
+                  <span className="flex items-center space-x-2">
+                     <span className="w-4 h-4 border-2 border-[#022c22] border-t-transparent rounded-full animate-spin"></span>
+                     <span>Underwriting...</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center space-x-2">
+                    <Search className="w-5 h-5" />
+                    <span>Objekt Scannen</span>
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* AI Report Result */}
+          {aiReport && (
+            <div className="bg-[#03362a] border border-[#c5a059]/30 rounded-2xl p-6 shadow-[0_0_20px_rgba(197,160,89,0.05)] animate-fade-in-up">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="col-span-2 space-y-6">
+                  <div>
+                    <div className="flex items-center space-x-3 mb-2">
+                       <Bot className="w-6 h-6 text-[#c5a059]" />
+                       <h3 className="text-lg font-bold text-white">Sharia AI Gutachten</h3>
+                    </div>
+                    <p className="text-xl text-white font-medium">{aiReport.title}</p>
+                    <p className="text-gray-400 text-sm">Maschinelles Underwriting für potenzielles Token-Volumen von <span className="text-[#c5a059] font-bold">{aiReport.volume}</span>.</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <p className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Erkannte Key-Faktoren:</p>
+                    <div className="flex flex-col gap-2">
+                      {aiReport.flags.map((idx: string, f: number) => (
+                        <div key={f} className="flex items-center space-x-3 bg-[#064e3b]/20 px-4 py-2.5 rounded-lg border border-[#064e3b]/40">
+                          <CheckCircle className="w-4 h-4 text-green-400 shrink-0" />
+                          <span className="text-gray-300 text-sm">{idx}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Score Panel */}
+                <div className="bg-[#022c22] border border-[#064e3b]/50 rounded-xl p-5 flex flex-col items-center justify-center text-center">
+                   <div className="relative">
+                     <svg className="w-32 h-32 transform -rotate-90">
+                        <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-[#064e3b]" />
+                        <circle cx="64" cy="64" r="56" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={56 * 2 * Math.PI} strokeDashoffset={56 * 2 * Math.PI * (1 - aiReport.score / 100)} className="text-[#c5a059] transition-all duration-1000 ease-out" strokeLinecap="round" />
+                     </svg>
+                     <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-3xl font-bold text-white">{aiReport.score}</span>
+                        <span className="text-xs text-gray-500">Score</span>
+                     </div>
+                   </div>
+                   
+                   <div className="mt-6 space-y-4 w-full">
+                     <div className="flex justify-between items-center border-b border-[#064e3b]/40 pb-2">
+                       <span className="text-gray-400 text-sm">Target IRR</span>
+                       <span className="text-green-400 font-bold">{aiReport.irr}</span>
+                     </div>
+                     <div className="flex justify-between items-center border-b border-[#064e3b]/40 pb-2">
+                       <span className="text-gray-400 text-sm">Sharia Status</span>
+                       <span className="bg-green-500/10 text-green-400 px-2 py-0.5 rounded text-xs font-bold">{aiReport.shariaCheck}</span>
+                     </div>
+                     <div className="flex justify-between items-center">
+                        <span className="text-gray-400 font-mono text-xs">{aiReport.verdict}</span>
+                     </div>
+                   </div>
+
+                   <button className="w-full mt-6 bg-[#064e3b] hover:bg-[#064e3b]/80 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center space-x-2 border border-green-500/30">
+                     <span>Smart Contract generieren</span>
+                     <ChevronRight className="w-4 h-4" />
+                   </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
