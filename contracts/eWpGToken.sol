@@ -27,6 +27,9 @@ contract eWpGToken {
     // Sharia Compliance Board
     address public shariaBoard;
     
+    // IPFS Hash for Legal Document (Basisinformationsblatt)
+    string public documentHash;
+    
     // Identity Registry for KYC (ERC-3643 Compliance)
     IIdentityRegistry public identityRegistry;
 
@@ -40,6 +43,7 @@ contract eWpGToken {
     event Frozen(address indexed investor);
     event Unfrozen(address indexed investor);
     event GlobalHalt(string reason);
+    event DocumentUpdated(string newHash);
     
     modifier onlyOwner() {
         require(msg.sender == owner, "Not token issuer");
@@ -129,5 +133,13 @@ contract eWpGToken {
         isShariaCompliant = false;
         isGlobalFreeze = true;
         emit GlobalHalt(_reason);
+    }
+
+    /**
+     * @dev Set the IPFS Hash of the BaFin Information Document (eWpG requirement).
+     */
+    function setDocument(string calldata _hash) external onlyAgent {
+        documentHash = _hash;
+        emit DocumentUpdated(_hash);
     }
 }
