@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowLeftRight, TrendingUp, TrendingDown, Search, Filter, AlertCircle, ShieldCheck } from "lucide-react";
+import { ArrowLeftRight, TrendingUp, TrendingDown, Search, Filter, AlertCircle, ShieldCheck, Loader2, CheckCircle2 } from "lucide-react";
 
 // Mock data for the secondary market order book
 const activeListings = [
@@ -22,6 +22,37 @@ const recentTrades = [
 export default function TradePage() {
   const [activeTab, setActiveTab] = useState<"buy" | "sell">("buy");
   const [search, setSearch] = useState("");
+  const [processingTrade, setProcessingTrade] = useState<string | null>(null);
+  const [tradeSuccess, setTradeSuccess] = useState<any>(null);
+
+  const handleExecuteTrade = async (listing: any) => {
+    setProcessingTrade(listing.id);
+    
+    try {
+      const res = await fetch("/api/trade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: activeTab,
+          listingId: listing.id,
+          symbol: listing.symbol,
+          amount: listing.tokens,
+          price: listing.askPrice
+        })
+      });
+      
+      const data = await res.json();
+      if(data.success) {
+         setTradeSuccess(data);
+      }
+    } catch(err) {
+      console.error(err);
+    } finally {
+      setProcessingTrade(null);
+      // Optional: hide success modal after delay
+      setTimeout(() => setTradeSuccess(null), 5000);
+    }
+  };
 
   const filteredListings = activeListings.filter(l => 
     l.symbol.toLowerCase().includes(search.toLowerCase()) || 
@@ -125,8 +156,16 @@ export default function TradePage() {
                           {new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(listing.volume)}
                         </td>
                         <td className="px-5 py-4 text-right">
-                           <button className="bg-[#c5a059] hover:bg-[#b08d48] text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-shadow shadow-md shadow-[#c5a059]/20">
-                             Kaufen
+                           <button 
+                             onClick={() => handleExecuteTrade(listing)}
+                             disabled={processingTrade === listing.id}
+                             className="bg-[#c5a059] hover:bg-[#b08d48] disabled:opacity-50 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-shadow shadow-md shadow-[#c5a059]/20 flex items-center justify-center min-w-[80px]"
+                           >
+                              {processingTrade === listing.id ? (
+                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                              ) : (
+                                activeTab === "buy" ? "Kaufen" : "Verkaufen"
+                              )}
                            </button>
                         </td>
                       </tr>
@@ -198,6 +237,43 @@ export default function TradePage() {
 
         </div>
       </div>
+
+      {/* Trade Success Modal */}
+      {tradeSuccess && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#022c22] border border-[#064e3b] rounded-2xl w-full max-w-md p-6 shadow-2xl animate-fade-in-up text-center space-y-4">
+             <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-8 h-8 text-green-400" />
+             </div>
+             <h3 className="text-xl font-bold text-white">Atomic Swap Erfolgreich</h3>
+             
+             <div className="bg-[#03362a] rounded-xl p-4 text-left space-y-2 border border-[#064e3b]/50">
+               <p className="text-xs text-gray-400 font-mono break-all mb-4">Tx: {tradeSuccess.txHash}</p>
+               
+               <div className="flex justify-between items-center border-b border-[#064e3b]/30 pb-2">
+                 <span className="text-gray-400 text-sm">Asset Swap</span>
+                 <span className="text-white font-bold">{tradeSuccess.tradeDetails.tokensTransferred} {tradeSuccess.tradeDetails.symbol}</span>
+               </div>
+               <div className="flex justify-between items-center border-b border-[#064e3b]/30 pb-2">
+                 <span className="text-gray-400 text-sm">Target Volumen</span>
+                 <span className="text-white font-bold">{new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(tradeSuccess.tradeDetails.fiatTransferred)}</span>
+               </div>
+               <div className="flex justify-between items-center">
+                 <span className="text-gray-400 text-sm">Status / Regulierung</span>
+                 <span className="bg-green-500/10 text-green-400 px-2 py-0.5 rounded text-xs font-bold uppercase">{tradeSuccess.status} (eWpG)</span>
+               </div>
+             </div>
+
+             <button 
+               onClick={() => setTradeSuccess(null)}
+               className="w-full bg-[#064e3b] hover:bg-[#064e3b]/80 text-white font-bold py-3 rounded-xl transition-all"
+             >
+               Zurück zum Markt
+             </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
