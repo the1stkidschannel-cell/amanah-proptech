@@ -263,8 +263,8 @@ export default function PropertyDetailPage() {
           <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-6">
             <h2 className="text-lg font-bold text-white mb-4">Investmentdokumente</h2>
             <div className="space-y-3">
-              {docsToShow.map((doc, i) => {
-                const DocIcon = docTypeIcons[doc.type];
+              {docsToShow.map((doc: any, i: number) => {
+                const DocIcon = docTypeIcons[doc.type as keyof typeof docTypeIcons];
                 return (
                   <div key={i} className="flex items-center justify-between bg-[#022c22] rounded-lg p-4 hover:bg-[#022c22]/70 transition-colors group">
                     <div className="flex items-center space-x-3">
