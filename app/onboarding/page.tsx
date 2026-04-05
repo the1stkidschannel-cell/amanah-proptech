@@ -25,6 +25,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState("");
+  const [kycResult, setKycResult] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -57,22 +58,36 @@ export default function OnboardingPage() {
   const handleComplete = async () => {
     setLoading(true);
     try {
+      const res = await fetch("/api/kyc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          userId: user?.uid || "demo_user",
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          nationality: formData.nationality,
+          sourceOfWealth: formData.sourceOfWealth
+        })
+      });
+      const data = await res.json();
+      
+      setKycResult(data);
+
       if (user && db) {
         await setDoc(
           doc(db, "users", user.uid),
           {
             ...formData,
-            kycStatus: "PENDING",
+            kycStatus: data.status || "PENDING",
             kycSubmittedAt: serverTimestamp(),
+            pepFlag: data.pepFlag || false
           },
           { merge: true }
         );
       }
-      // Simulation of processing
-      setTimeout(() => {
-        setLoading(false);
-        setStep(4); // Success step
-      }, 2000);
+      
+      setLoading(false);
+      setStep(4); // Success / Result step
     } catch (err) {
       setLoading(false);
       setToast("Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
@@ -398,19 +413,51 @@ export default function OnboardingPage() {
         {/* Step 4: Success */}
         {step === 4 && (
           <div className="text-center py-12 animate-fade-in-up">
-            <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-12 h-12 text-green-400" />
-            </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Alhamdulillah!</h2>
-            <p className="text-lg text-gray-300 mb-8 max-w-lg mx-auto">
-              Ihr Profil wurde erfolgreich verifiziert. Sie sind nun berechtigt, in unsere tokenisierten Halal-Immobilien zu investieren.
-            </p>
-            <button
-              onClick={() => router.push("/invest")}
-              className="bg-[#c5a059] hover:bg-[#b08d48] text-white px-8 py-4 rounded-xl text-lg font-bold transition-all shadow-xl shadow-[#c5a059]/20"
-            >
-              Zum Primärmarkt
-            </button>
+            {kycResult?.status === "VERIFIED" || !kycResult ? (
+              <>
+                <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle className="w-12 h-12 text-green-400" />
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-2">Alhamdulillah!</h2>
+                <p className="text-lg text-gray-300 mb-8 max-w-lg mx-auto">
+                  Ihr Profil wurde von unserem Partner (IDnow) erfolgreich verifiziert inkl. AML & Sanction Check. Sie sind nun nach eWpG berechtigt, in tokenisierte Immobilien zu investieren.
+                </p>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={() => router.push("/invest")}
+                    className="bg-[#c5a059] hover:bg-[#b08d48] text-white px-8 py-4 rounded-xl text-lg font-bold transition-all shadow-xl shadow-[#c5a059]/20"
+                  >
+                    Zum Primärmarkt
+                  </button>
+                  <button
+                    onClick={() => router.push("/wallet")}
+                    className="bg-[#03362a] border border-[#064e3b] text-white px-8 py-4 rounded-xl text-lg font-bold transition-all"
+                  >
+                    Guthaben aufladen
+                  </button>
+                </div>
+              </>
+            ) : kycResult?.status === "MANUAL_REVIEW" ? (
+              <>
+                <div className="w-24 h-24 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <AlertTriangle className="w-12 h-12 text-yellow-500" />
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-2">Manuelle Prüfung erforderlich</h2>
+                <p className="text-lg text-gray-300 mb-8 max-w-lg mx-auto">
+                  Ihre Daten wurden erfasst, es gab jedoch einen GwG-Flag (Politically Exposed Person). Unser Compliance-Team prüft Ihren Antrag in Kürze.
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="w-24 h-24 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <AlertTriangle className="w-12 h-12 text-red-500" />
+                </div>
+                <h2 className="text-3xl font-bold text-white mb-2">GWG Ablehnung</h2>
+                <p className="text-lg text-gray-300 mb-8 max-w-lg mx-auto">
+                  Registrierung abgelehnt. Die Herkunft der Mittel konnte nicht AML-konform nachgewiesen werden. Bitte kontaktieren Sie unseren Support.
+                </p>
+              </>
+            )}
           </div>
         )}
       </div>
