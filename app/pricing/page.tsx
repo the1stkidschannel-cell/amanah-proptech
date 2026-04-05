@@ -1,228 +1,190 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ShieldCheck,
-  Bot,
-  Scale,
-  Zap,
-  Building2,
-  Check,
-  ArrowRight,
-  Star,
-  Globe,
-  FileText,
-  Lock,
-  Users,
-  TrendingUp,
-  BadgeCheck,
-} from "lucide-react";
+import { CheckCircle2, ShieldCheck, Zap, Database, Building2, Server, Globe2, Loader2 } from "lucide-react";
+import Link from "next/link";
 
-const plans = [
-  {
-    name: "Starter",
-    price: "0",
-    period: "/ Monat",
-    description: "Für Einzelpersonen und erste Tests",
-    features: [
-      "3 Sharia Audits / Monat",
-      "PDF & TXT Uploads",
-      "Standard AAOIFI-Prüfung",
-      "Exportierbare Berichte",
-      "Community Support",
-    ],
-    cta: "Kostenlos starten",
-    highlight: false,
-    badge: null,
-  },
+const pricingTiers = [
   {
     name: "Professional",
-    price: "299",
-    period: "/ Monat",
-    description: "Für Islamic Finance Berater & Kanzleien",
+    price: "€ 1.990",
+    interval: "pro Monat",
+    description: "Für kleine bis mittlere Vermögensverwalter, die Tokenomics in ihr Portfolio aufnehmen wollen.",
+    badge: null,
     features: [
-      "Unbegrenzte Audits",
-      "Alle Dateiformate inkl. Smart Contracts",
-      "Multi-Standard Support (AAOIFI + IFSB)",
-      "Detaillierte XAI-Analyse (Explainable AI)",
-      "White-Label-Berichte mit eigenem Branding",
-      "API-Zugang (REST + Webhook)",
-      "Prioritäts-Support",
-      "DSGVO-konformer Datenraum",
+      "Zugriff auf Primary Market API",
+      "Bis zu 3 Sub-Accounts",
+      "Basic Sharia Compliance Reporting",
+      "Standard E-Mail Support (24h)",
+      "Standard Trading Fees (1.0%)"
     ],
-    cta: "14 Tage testen",
-    highlight: true,
-    badge: "Empfohlen",
+    icon: Database,
+    buttonText: "Abonnieren",
+    buttonType: "outline",
+    priceId: "price_professional"
   },
   {
     name: "Enterprise",
-    price: "Individuell",
-    period: "",
-    description: "Für Islamic Banks, Fonds & Regulatoren",
+    price: "€ 4.990",
+    interval: "pro Monat",
+    description: "Das komplette White-Label Ökosystem für etablierte Family Offices und Banken.",
+    badge: "Empfohlen",
     features: [
-      "Alles aus Professional",
-      "Dedizierte AI-Instanz (Private Cloud)",
-      "On-Premise Deployment möglich",
-      "Custom Fatwa-Datenbank Integration",
-      "SSO & Role-Based Access Control",
-      "SLA mit 99.9% Uptime Garantie",
-      "Dedicated Account Manager",
-      "Schulungen & Onboarding",
+      "White-Label Tokenization Engine (Dein Branding)",
+      "Automatisiertes eWpG Setup für eigene SPVs",
+      "Unlimitierte Sub-Accounts (Multi-Tenancy)",
+      "Vollzugriff via REST API & Webhooks",
+      "Dedizierter Account Manager (SLA 4h)",
+      "Reduzierte Trading Fees (0.2%)"
     ],
-    cta: "Kontakt aufnehmen",
-    highlight: false,
+    icon: Zap,
+    buttonText: "Upgrade auf Enterprise",
+    buttonType: "primary",
+    priceId: "price_enterprise"
+  },
+  {
+    name: "Institutionell",
+    price: "Custom",
+    interval: "Jährlich abgerechnet",
+    description: "Individuelle On-Premise Installationen oder exklusive Private-Dealflow-Pipelines.",
     badge: null,
-  },
-];
-
-const useCases = [
-  {
-    icon: Building2,
-    title: "Islamic Banks",
-    description: "Automatisierte Compliance-Prüfung für Kreditverträge, Konto-Produkte und Sukuk-Strukturen.",
-  },
-  {
-    icon: Scale,
-    title: "Sharia Advisory Boards",
-    description: "Pre-Screening Tool für Fatwa-Entscheidungen mit dokumentierter AI-Begründungskette.",
-  },
-  {
-    icon: FileText,
-    title: "Rechtsanwaltskanzleien",
-    description: "Due-Diligence Beschleunigung bei islamkonformen Transaktionen und Fondsstrukturen.",
-  },
-  {
-    icon: Globe,
-    title: "RegTech & Compliance",
-    description: "API-Integration in bestehende GRC-Systeme für lückenlose Sharia-Governance.",
-  },
+    features: [
+      "Eigenes Smart-Contract Factory Deployment",
+      "On-Premise Node Operations",
+      "Prioritärer Zugang zu Core-Real-Estate Deals",
+      "Direkter Kontakt zum AAOIFI Sharia Board",
+      "Zero Trading Fees (0.00%)"
+    ],
+    icon: Server,
+    buttonText: "Sales kontaktieren",
+    buttonType: "outline",
+    priceId: "contact_sales"
+  }
 ];
 
 export default function PricingPage() {
-  const [annual, setAnnual] = useState(true);
+  const [loadingTier, setLoadingTier] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+
+  const handleCheckout = async (priceId: string) => {
+    if (priceId === "contact_sales") {
+      window.location.href = "mailto:institutional@amanah-proptech.com";
+      return;
+    }
+
+    setLoadingTier(priceId);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId })
+      });
+      const data = await response.json();
+      
+      if (data.url) {
+         setCheckoutUrl(data.url); // Simulating Stripe Checkout Redirect
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingTier(null);
+    }
+  };
+
+  if (checkoutUrl) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center animate-fade-in-up text-center">
+         <ShieldCheck className="w-20 h-20 text-green-400 mb-6 mx-auto" />
+         <h1 className="text-3xl font-bold text-white mb-4">Weiterleitung zu Stripe Checkout...</h1>
+         <p className="text-gray-400 max-w-md">In einer Produktionsumgebung würdest du jetzt auf die hochsichere Stripe B2B-Checkout Page weitergeleitet werden, um das SEPA/Kreditkarten Mandat zu unterschreiben.</p>
+         <button onClick={() => setCheckoutUrl(null)} className="mt-8 text-[#c5a059] hover:underline">Simulation abbrechen</button>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-12 animate-fade-in-up pb-16">
+      
       {/* Header */}
-      <div>
-        <div className="flex items-center space-x-2 mb-1">
-          <Bot className="w-6 h-6 text-[#c5a059]" />
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">Sharia AI Engine – SaaS</h1>
+      <div className="text-center max-w-3xl mx-auto space-y-4">
+        <div className="inline-flex items-center space-x-2 bg-[#022c22] border border-[#d4af37]/30 px-4 py-2 rounded-full text-sm font-bold text-[#d4af37] shadow-lg shadow-[#d4af37]/10">
+          <Globe2 className="w-4 h-4" />
+          <span>B2B Platform als Service (PaaS)</span>
         </div>
-        <p className="text-gray-400 mt-1 max-w-2xl">
-          Lizenzieren Sie unsere proprietäre Sharia-KI für Ihre eigenen Produkte. Automatisierte AAOIFI-Compliance-Prüfung als Service.
+        <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tight">Skalierbare API-Infrastruktur für Ihr Wachstum.</h1>
+        <p className="text-lg text-gray-400 leading-relaxed">
+          Nutzen Sie die Amanah PropTech Engine, um Ihren eigenen Kunden sharia-konforme, tokenisierte Anlageprodukte vollautomatisiert anzubieten. White-Label, eWpG-konform und sofort einsetzbar.
         </p>
       </div>
 
-      {/* Billing Toggle */}
-      <div className="flex items-center justify-center space-x-4">
-        <span className={`text-sm font-medium ${!annual ? "text-white" : "text-gray-500"}`}>Monatlich</span>
-        <button
-          onClick={() => setAnnual(!annual)}
-          className={`relative w-14 h-7 rounded-full transition-colors ${annual ? "bg-[#c5a059]" : "bg-[#064e3b]"}`}
-        >
-          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all ${annual ? "left-8" : "left-1"}`} />
-        </button>
-        <span className={`text-sm font-medium ${annual ? "text-white" : "text-gray-500"}`}>
-          Jährlich <span className="text-green-400 text-xs">(-20%)</span>
-        </span>
-      </div>
-
-      {/* Pricing Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {plans.map((plan) => {
-          const displayPrice = plan.price !== "Individuell" && annual && plan.price !== "0"
-            ? Math.round(Number(plan.price) * 0.8).toString()
-            : plan.price;
-
-          return (
-            <div
-              key={plan.name}
-              className={`relative bg-[#03362a] rounded-2xl p-6 flex flex-col ${
-                plan.highlight
-                  ? "border-2 border-[#c5a059] shadow-xl shadow-[#c5a059]/10"
-                  : "border border-[#064e3b]/40"
-              }`}
-            >
-              {plan.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#c5a059] text-white text-xs font-bold px-4 py-1 rounded-full flex items-center space-x-1">
-                  <Star className="w-3 h-3" />
-                  <span>{plan.badge}</span>
-                </div>
-              )}
-
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-1">{plan.name}</h3>
-                <p className="text-sm text-gray-400">{plan.description}</p>
+      {/* Pricing Modules */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {pricingTiers.map((tier, index) => (
+          <div 
+            key={index} 
+            className={`relative flex flex-col bg-[#03362a] rounded-3xl transition-transform hover:-translate-y-2 ${
+              tier.badge ? "border-2 border-[#c5a059] shadow-2xl shadow-[#c5a059]/20" : "border border-[#064e3b]/40 shadow-xl"
+            }`}
+          >
+            {tier.badge && (
+              <div className="absolute -top-4 inset-x-0 flex justify-center">
+                <span className="bg-[#c5a059] text-black text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">
+                  {tier.badge}
+                </span>
               </div>
-
-              <div className="mb-6">
-                <div className="flex items-end space-x-1">
-                  {displayPrice !== "Individuell" ? (
-                    <>
-                      <span className="text-4xl font-bold text-white">€{displayPrice}</span>
-                      <span className="text-gray-500 text-sm mb-1">{plan.period}</span>
-                    </>
-                  ) : (
-                    <span className="text-3xl font-bold text-white">Individuell</span>
-                  )}
-                </div>
-                {plan.price !== "0" && plan.price !== "Individuell" && annual && (
-                  <p className="text-xs text-green-400 mt-1">€{Math.round(Number(displayPrice) * 12)} / Jahr (statt €{Number(plan.price) * 12})</p>
-                )}
+            )}
+            
+            <div className="p-8 pb-0">
+              <div className="w-12 h-12 bg-[#022c22] rounded-xl flex items-center justify-center border border-[#064e3b] mb-6">
+                 <tier.icon className={`w-6 h-6 ${tier.badge ? "text-[#c5a059]" : "text-white"}`}/>
               </div>
+              <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
+              <p className="text-sm text-gray-400 mb-6 h-10">{tier.description}</p>
+              <div className="mb-8">
+                <span className="text-4xl font-bold text-white">{tier.price}</span>
+                <span className="text-sm text-gray-500 ml-2">{tier.interval}</span>
+              </div>
+            </div>
 
-              <div className="flex-1 space-y-3 mb-6">
-                {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-start space-x-2">
-                    <Check className={`w-4 h-4 mt-0.5 shrink-0 ${plan.highlight ? "text-[#c5a059]" : "text-green-400"}`} />
-                    <span className="text-sm text-gray-300">{feature}</span>
-                  </div>
+            <div className="px-8 pb-8 flex-1 flex flex-col">
+              <ul className="space-y-4 mb-8 flex-1">
+                {tier.features.map((feature, fIndex) => (
+                  <li key={fIndex} className="flex items-start">
+                    <CheckCircle2 className="w-5 h-5 text-green-400 shrink-0 mr-3 mt-0.5" />
+                    <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
 
-              <button
-                className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center space-x-2 ${
-                  plan.highlight
-                    ? "bg-[#c5a059] hover:bg-[#b08d48] text-white shadow-lg shadow-[#c5a059]/20"
-                    : "bg-[#064e3b] hover:bg-[#064e3b]/70 text-white"
+              <button 
+                onClick={() => handleCheckout(tier.priceId)}
+                disabled={loadingTier === tier.priceId}
+                className={`w-full py-4 rounded-xl font-bold text-sm transition-all flex items-center justify-center ${
+                  tier.buttonType === "primary" 
+                    ? "bg-[#c5a059] hover:bg-[#b08d48] text-[#022c22] shadow-lg shadow-[#c5a059]/20" 
+                    : "bg-[#022c22] border border-[#064e3b] hover:border-[#c5a059] text-white"
                 }`}
               >
-                <span>{plan.cta}</span>
-                <ArrowRight className="w-4 h-4" />
+                {loadingTier === tier.priceId ? <Loader2 className="w-5 h-5 animate-spin" /> : tier.buttonText}
               </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
-      {/* Use Cases */}
-      <div>
-        <h2 className="text-xl font-bold text-white mb-6 text-center">Wer profitiert von der Sharia AI Engine?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {useCases.map((uc, i) => (
-            <div
-              key={i}
-              className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-5 hover:border-[#c5a059]/30 transition-all group"
-            >
-              <div className="w-10 h-10 bg-[#022c22] rounded-lg flex items-center justify-center border border-[#064e3b] mb-4 group-hover:bg-[#c5a059]/10 transition-colors">
-                <uc.icon className="w-5 h-5 text-[#c5a059]" />
-              </div>
-              <h3 className="text-sm font-bold text-white mb-2">{uc.title}</h3>
-              <p className="text-xs text-gray-400 leading-relaxed">{uc.description}</p>
-            </div>
-          ))}
+      {/* Architecture Sell */}
+      <div className="max-w-6xl mx-auto mt-20 bg-[#022c22] rounded-3xl border border-[#064e3b]/50 p-8 lg:p-12 text-center lg:text-left flex flex-col lg:flex-row items-center gap-12">
+        <div className="lg:w-2/3 space-y-6">
+          <h2 className="text-3xl font-bold text-white">Entwickelt für globale Skalierung</h2>
+          <p className="text-gray-400 leading-relaxed">
+            Als White-Label SaaS Plattform übernehmen wir die schwere technische Arbeit hinter den Kulissen. Von der BaFin-Reporting-Schnittstelle über das dynamische PDF-Ijarah-Generation bis zur SPV-Verwaltung auf der Polygon-Blockchain. Amanah PropTech abstrahiert die gesamte regulative und technische Komplexität in eine einzige, saubere REST API.
+          </p>
+          <Link href="/institutional/dashboard" className="inline-block text-[#c5a059] font-bold hover:underline">
+            Zurück zur Family Office Umgebung →
+          </Link>
         </div>
-      </div>
-
-      {/* Trust bar */}
-      <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-6 text-center">
-        <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
-          <span className="flex items-center space-x-2"><ShieldCheck className="w-5 h-5 text-green-400" /><span>AAOIFI-konform</span></span>
-          <span className="flex items-center space-x-2"><Lock className="w-5 h-5 text-blue-400" /><span>DSGVO & ISO 27001</span></span>
-          <span className="flex items-center space-x-2"><BadgeCheck className="w-5 h-5 text-[#c5a059]" /><span>SOC 2 Type II</span></span>
-          <span className="flex items-center space-x-2"><Users className="w-5 h-5 text-purple-400" /><span>50+ Unternehmenskunden</span></span>
-          <span className="flex items-center space-x-2"><TrendingUp className="w-5 h-5 text-green-400" /><span>99.9% Uptime</span></span>
+        <div className="lg:w-1/3 flex justify-center">
+           <Building2 className="w-48 h-48 text-[#03362a]" />
         </div>
       </div>
     </div>
