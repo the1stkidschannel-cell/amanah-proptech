@@ -255,14 +255,36 @@ export default function TradePage() {
                  <span className="text-white font-bold">{tradeSuccess.tradeDetails.tokensTransferred} {tradeSuccess.tradeDetails.symbol}</span>
                </div>
                <div className="flex justify-between items-center border-b border-[#064e3b]/30 pb-2">
+                 <span className="text-gray-400 text-sm">Durchschnittlicher Execution-Preis</span>
+                 <span className="text-white font-bold">{new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(tradeSuccess.tradeDetails.averagePrice || tradeSuccess.tradeDetails.executionPrice)}</span>
+               </div>
+               <div className="flex justify-between items-center border-b border-[#064e3b]/30 pb-2">
                  <span className="text-gray-400 text-sm">Target Volumen</span>
                  <span className="text-white font-bold">{new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(tradeSuccess.tradeDetails.fiatTransferred)}</span>
                </div>
+               <div className="flex justify-between items-center border-b border-[#064e3b]/30 pb-2">
+                 <span className="text-gray-400 text-sm text-[#c5a059]">Platform Fee (Amanah)</span>
+                 <span className="text-[#c5a059] font-bold">{new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(tradeSuccess.tradeDetails.amanahPlatformFeeDue || 0)}</span>
+               </div>
                <div className="flex justify-between items-center">
                  <span className="text-gray-400 text-sm">Status / Regulierung</span>
-                 <span className="bg-green-500/10 text-green-400 px-2 py-0.5 rounded text-xs font-bold uppercase">{tradeSuccess.status} (eWpG)</span>
+                 <span className={`${tradeSuccess.status === "partial" ? "bg-yellow-500/10 text-yellow-400" : "bg-green-500/10 text-green-400"} px-2 py-0.5 rounded text-xs font-bold uppercase`}>{tradeSuccess.status} (eWpG)</span>
                </div>
              </div>
+
+             {/* Matching Engine Logs View */}
+             {tradeSuccess.logs && (
+               <div className="bg-black/80 rounded-xl p-4 text-left border border-gray-800 mt-2 h-32 overflow-y-auto">
+                 <p className="text-[10px] text-gray-500 mb-2 uppercase font-bold tracking-widest">Matching Engine Output</p>
+                 <div className="space-y-1 font-mono text-[10px]">
+                   {tradeSuccess.logs.map((log: string, idx: number) => (
+                     <div key={idx} className={log.includes("PARTIAL") ? "text-[#c5a059]" : log.includes("ERROR") ? "text-red-400" : "text-green-400"}>
+                       {log}
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
 
              <button 
                onClick={() => setTradeSuccess(null)}
