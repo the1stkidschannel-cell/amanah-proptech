@@ -3,18 +3,39 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Building2, MapPin, TrendingUp, ShieldCheck, ArrowRight, Filter, Search, SlidersHorizontal, CheckCircle } from "lucide-react";
-import { properties } from "@/lib/properties";
+import { Building2, MapPin, TrendingUp, ShieldCheck, ArrowRight, Filter, Search, SlidersHorizontal, CheckCircle, Loader2 } from "lucide-react";
+import { getLiveProperties, Property } from "@/lib/firebase/properties";
 
 export default function InvestPage() {
   const [filterType, setFilterType] = useState<string>("Alle");
   const [filterYield, setFilterYield] = useState<number>(0);
   const [search, setSearch] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load live properties from Firestore on mount
+  useState(() => {
+    let _mounted = true;
+    (async () => {
+      try {
+        const liveProps = await getLiveProperties();
+        if (_mounted) {
+          setProperties(liveProps);
+          setLoading(false);
+        }
+      } catch (e) {
+        console.error(e);
+        if (_mounted) setLoading(false);
+      }
+    })();
+    return () => { _mounted = false; };
+  });
 
   const filteredProperties = useMemo(() => {
     return properties.filter((p) => {
-      const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.city.toLowerCase().includes(search.toLowerCase());
+      // In firebase we set "location" or "city" string so we use location here
+      const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.location.toLowerCase().includes(search.toLowerCase());
       const matchType = filterType === "Alle" || p.type.includes(filterType);
       const matchYield = p.yield >= filterYield;
       return matchSearch && matchType && matchYield;
@@ -115,7 +136,12 @@ export default function InvestPage() {
 
         {/* Property Grid */}
         <div className="lg:col-span-3">
-          {filteredProperties.length === 0 ? (
+          {loading ? (
+             <div className="flex flex-col items-center justify-center p-32">
+                <Loader2 className="w-10 h-10 text-[#c5a059] animate-spin mb-4" />
+                <p className="text-gray-400">Lade Live-Projekte aus dem Blockchain-Register...</p>
+             </div>
+          ) : filteredProperties.length === 0 ? (
             <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-12 text-center">
               <Search className="w-12 h-12 text-gray-500 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-bold text-white mb-2">Keine Projekte gefunden</h3>
@@ -150,7 +176,7 @@ export default function InvestPage() {
                     {/* Status & Sharia Badges */}
                     <div className="absolute top-3 right-3 bg-[#064e3b]/90 backdrop-blur-sm text-[#d4af37] text-[10px] uppercase font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 z-10">
                       <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                      <span>{p.status === "funding" ? "Funding aktiv" : "Geschlossen"}</span>
+                      <span>{p.status === "Live" ? "Funding aktiv" : "Geschlossen"}</span>
                     </div>
                     <div className="absolute top-3 left-3 bg-green-600/90 backdrop-blur-sm text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full flex items-center space-x-1 z-10">
                       <ShieldCheck className="w-3 h-3" />

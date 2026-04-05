@@ -25,18 +25,52 @@ import {
   Info,
   Wallet,
   ExternalLink,
-  Database
+  Database,
+  Loader2
 } from "lucide-react";
-import { getPropertyById } from "@/lib/properties";
+import { getPropertyById, Property } from "@/lib/firebase/properties";
 
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const property = getPropertyById(params.id as string);
+  
+  const [property, setProperty] = useState<Property | null>(null);
+  const [loadingProp, setLoadingProp] = useState(true);
+
+  // Fetch property from Firestore
+  useState(() => {
+    let _mounted = true;
+    (async () => {
+      try {
+        const id = Array.isArray(params.id) ? params.id[0] : params.id;
+        if (id) {
+          const prop = await getPropertyById(id);
+          if (_mounted) {
+            setProperty(prop);
+            setLoadingProp(false);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        if (_mounted) setLoadingProp(false);
+      }
+    })();
+    return () => { _mounted = false; };
+  });
+
   const [investAmount, setInvestAmount] = useState(5000);
   const [showAllDocs, setShowAllDocs] = useState(false);
   const [toast, setToast] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (loadingProp) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 animate-fade-in-up">
+        <Loader2 className="w-16 h-16 text-[#c5a059] mb-4 animate-spin" />
+        <h2 className="text-2xl font-bold text-white mb-2">Immobilie wird geladen...</h2>
+      </div>
+    );
+  }
 
   if (!property) {
     return (
@@ -279,8 +313,8 @@ export default function PropertyDetailPage() {
              <div className="space-y-4 relative z-10">
                 <div className="bg-[#022c22] rounded-lg p-4 border border-[#064e3b]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                    <div>
-                     <p className="text-xs text-green-400 font-semibold mb-1 uppercase tracking-wider">ERC-3643 Smart Contract</p>
-                     <p className="text-sm font-mono text-white">0x9E7a...4fB2 (Polygon POS)</p>
+                     <p className="text-xs text-green-400 font-semibold mb-1 uppercase tracking-wider">ERC-3643 Smart Contract Token</p>
+                     <p className="text-sm font-mono text-white">{property.tokenSymbol} (Polygon POS)</p>
                    </div>
                    <button className="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs font-medium transition-colors bg-[#03362a] px-3 py-2 rounded-md border border-[#064e3b]">
                      <ExternalLink className="w-3.5 h-3.5" /> Auf Polygonscan prüfen

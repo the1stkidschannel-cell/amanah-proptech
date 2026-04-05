@@ -19,6 +19,7 @@ import {
   Ruler
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { addProperty } from "@/lib/firebase/properties";
 
 export default function AssetOriginationWizard() {
   const router = useRouter();
@@ -49,15 +50,58 @@ export default function AssetOriginationWizard() {
     
     // Simulate DB Save & Smart Contract Generation
     setTimeout(() => setDeploymentLog(prev => [...prev, "Speichere Immobilien-Metadaten in Firestore..."]), 800);
-    setTimeout(() => setDeploymentLog(prev => [...prev, "Generiere Basisinformationsblatt (BIB) & eWpG Hashes..."]), 1600);
-    setTimeout(() => setDeploymentLog(prev => [...prev, "Kompiliere ERC-3643 Smart Contract (Amanah PropTech eWpG Token)..."]), 2800);
-    setTimeout(() => setDeploymentLog(prev => [...prev, `Deploye Contract für Asset [${formData.tokenSymbol}] aufs Polygon Mainnet...`]), 4500);
-    setTimeout(() => setDeploymentLog(prev => [...prev, "Tx Bestätigung: 0x8a92...3b11 | Contract generiert."]), 6000);
-    setTimeout(() => setDeploymentLog(prev => [...prev, "Asset erfolgreich auf dem Primärmarkt gelistet! 🚀"]), 7500);
+    
+    // Actually save to Firebase Firestore
+    setTimeout(async () => {
+      try {
+        await addProperty({
+          name: formData.name,
+          location: formData.location,
+          type: formData.type,
+          description: formData.description,
+          targetVolume: parseInt(formData.targetVolume),
+          yield: parseFloat(formData.yield),
+          holdingPeriod: formData.holdingPeriod,
+          tokenSymbol: formData.tokenSymbol,
+          tokenPrice: parseInt(formData.tokenPrice),
+          shariaStructure: formData.shariaStructure,
+          image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop", // Placeholder image
+          documents: [
+            { type: "legal", title: "Basisinformationsblatt (eWpG)", description: "Prospekt nach eWpG" },
+            { type: "sharia", title: "AAOIFI Fatwa", description: "Sharia Compliant Cert." }
+          ],
+          status: "Live",
+          funded: 0,
+          livingArea: 3500,
+          plotArea: 5000,
+          yearBuilt: 2024,
+          floors: 6,
+          energyRating: "A+",
+          parkingSpaces: 50,
+          occupancyRate: 100,
+          monthlyRent: 85000,
+          annualNetIncome: 1020000,
+          minInvest: 500,
+          maxInvest: 100000,
+          units: 40,
+          highlights: ["Neubau Erstbezug", "Top Verkehrsanbindung", "ESG-Konform"]
+        });
+        setDeploymentLog(prev => [...prev, "Firestore Eintragung erfolgreich!"]);
+      } catch (err) {
+        console.error("Firebase Error:", err);
+        setDeploymentLog(prev => [...prev, "WARNUNG: Firestore Speicherung fehlgeschlagen."]);
+      }
+    }, 1200);
+
+    setTimeout(() => setDeploymentLog(prev => [...prev, "Generiere Basisinformationsblatt (BIB) & eWpG Hashes..."]), 2500);
+    setTimeout(() => setDeploymentLog(prev => [...prev, "Kompiliere ERC-3643 Smart Contract (Amanah PropTech eWpG Token)..."]), 4000);
+    setTimeout(() => setDeploymentLog(prev => [...prev, `Deploye Contract für Asset [${formData.tokenSymbol}] aufs Polygon Mainnet...`]), 6000);
+    setTimeout(() => setDeploymentLog(prev => [...prev, "Tx Bestätigung: 0x8a92...3b11 | Contract generiert."]), 7500);
+    setTimeout(() => setDeploymentLog(prev => [...prev, "Asset erfolgreich auf dem Primärmarkt gelistet! 🚀"]), 8500);
     
     setTimeout(() => {
       router.push("/invest");
-    }, 10000);
+    }, 10500);
   };
 
   return (
