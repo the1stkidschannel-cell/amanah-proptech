@@ -35,7 +35,7 @@ const navItems = [
   { label: "Amanah Academy", href: "/academy", icon: GraduationCap },
   { label: "Profil & KYC", href: "/onboarding", icon: UserPen },
   { label: "Sharia AI", href: "/compliance", icon: ShieldCheck },
-  { label: "Token Factory", href: "/admin/tokenization", icon: Cpu },
+  { label: "Token Factory", href: "/admin/properties/create", icon: Cpu },
   { label: "SaaS Pricing", href: "/pricing", icon: BadgeDollarSign },
   { label: "Admin", href: "/admin", icon: Settings },
 ];
