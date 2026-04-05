@@ -1,6 +1,6 @@
 "use client";
 
-import { Wallet, ArrowUpRight, ArrowDownLeft, Copy, CheckCircle, PieChart as PieChartIcon, TrendingUp, DollarSign, Globe, CreditCard, X } from "lucide-react";
+import { Wallet, ArrowUpRight, ArrowDownLeft, Copy, CheckCircle, PieChart as PieChartIcon, TrendingUp, DollarSign, Globe, CreditCard, X, Download } from "lucide-react";
 import { useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
 
@@ -39,6 +39,7 @@ export default function WalletPage() {
   const [showDeposit, setShowDeposit] = useState(false);
   const [depositAmount, setDepositAmount] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [downloadingTx, setDownloadingTx] = useState<number | null>(null);
 
   const walletAddress = "0xAm4n4h…3B7f";
   const baseFiatEUR = 1250;
@@ -67,6 +68,35 @@ export default function WalletPage() {
       setDepositAmount("");
       // Logic would go here to update backend
     }, 2500);
+  };
+
+  const handleDownloadPDF = async (tx: any) => {
+    setDownloadingTx(tx.id);
+    try {
+      const res = await fetch("/api/reporting", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          txId: `TX-${tx.id.toString().padStart(6, '0')}-${Date.now().toString().slice(-4)}`,
+          type: tx.type === "in" ? "yield" : "buy",
+          user: "Investitionskonto Amanah",
+          amount: tx.amount,
+          asset: tx.asset,
+          date: tx.date
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Trigger download
+        const link = document.createElement('a');
+        link.href = `data:application/pdf;base64,${data.pdfBase64}`;
+        link.download = data.filename;
+        link.click();
+      }
+    } catch (e) {
+      console.error("Failed to generate PDF", e);
+    }
+    setDownloadingTx(null);
   };
 
   return (
@@ -232,9 +262,19 @@ export default function WalletPage() {
                   <p className="text-xs text-gray-500">{tx.date} · Asset: <span className="text-[#c5a059] font-mono">{tx.asset}</span></p>
                 </div>
               </div>
-              <span className={`text-base font-bold ${tx.type === "in" ? "text-green-400" : "text-white"}`}>
-                {tx.amount}
-              </span>
+              <div className="flex items-center space-x-3">
+                 <span className={`text-base font-bold ${tx.type === "in" ? "text-green-400" : "text-white"}`}>
+                   {tx.amount}
+                 </span>
+                 <button 
+                   onClick={() => handleDownloadPDF(tx)} 
+                   disabled={downloadingTx === tx.id}
+                   className="p-2 ml-2 bg-[#022c22] border border-[#064e3b] text-gray-400 hover:text-[#c5a059] rounded-lg transition-colors disabled:opacity-50"
+                   title="eWpG Zertifikat/Beleg herunterladen"
+                 >
+                   {downloadingTx === tx.id ? <span className="w-4 h-4 border-2 border-[#c5a059] border-t-transparent rounded-full animate-spin block"></span> : <Download className="w-4 h-4 cursor-pointer" />}
+                 </button>
+              </div>
             </div>
           ))}
         </div>
