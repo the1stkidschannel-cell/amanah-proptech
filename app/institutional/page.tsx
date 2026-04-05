@@ -2,6 +2,7 @@
 
 import { Building2, ShieldCheck, TrendingUp, Handshake, Lock, ChevronRight, FileText, Download } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function InstitutionalPage() {
   return (
@@ -22,10 +23,10 @@ export default function InstitutionalPage() {
             <p className="text-lg text-gray-400 mb-8 max-w-lg">
               Ab 500.000 € Investmentvolumen bieten wir dedizierte SPV-Deals, tiefgehende White-Label Sharia Audits und bevorzugten Zugang (Pre-Market) zu europäischen Core-Immobilien.
             </p>
-            <button className="bg-[#c5a059] hover:bg-[#b08d48] text-white px-8 py-4 rounded-xl font-bold transition-all shadow-xl shadow-[#c5a059]/20 flex items-center space-x-2">
+            <Link href="/institutional/dashboard" className="bg-[#c5a059] hover:bg-[#b08d48] text-white px-8 py-4 rounded-xl font-bold transition-all shadow-xl shadow-[#c5a059]/20 flex items-center space-x-2 inline-flex">
               <Handshake className="w-5 h-5" />
-              <span>Investment Committee kontaktieren</span>
-            </button>
+              <span>Zum Family Office Dashboard</span>
+            </Link>
           </div>
           
           <div className="bg-[#022c22]/80 backdrop-blur-md border border-[#c5a059]/30 rounded-2xl p-8 shadow-2xl">
