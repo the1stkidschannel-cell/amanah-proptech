@@ -1,26 +1,97 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-brand-emerald: #064e3b;
+  --color-brand-dark: #022c22;
+  --color-brand-gold: #c5a059;
+  --color-brand-gold-light: #d4af37;
+  --color-brand-gold-hover: #b08d48;
+  
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #022c22;
+  color: #f8fafc;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: #064e3b;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c5a059;
+  cursor: pointer;
+  border: 2px solid #022c22;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #022c22; }
+::-webkit-scrollbar-thumb { background: #064e3b; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #0d7a5e; }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+
+/* Print Styles for Sharia Reports */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  aside, 
+  nav, 
+  header, 
+  button {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .bg-\[#03362a\], 
+  .bg-\[#022c22\],
+  .bg-\[#064e3b\] {
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: black !important;
+  }
+  .text-white, 
+  .text-gray-400, 
+  .text-gray-300 {
+    color: black !important;
+  }
+  .text-\[#c5a059\], 
+  .text-\[#d4af37\] {
+    color: #854d0e !important; /* Darker gold for print */
+  }
+  .border-\[#064e3b\],
+  .border-\[#c5a059\] {
+    border-color: #e2e8f0 !important;
+  }
 }
