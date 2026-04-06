@@ -46,11 +46,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#022c22] text-white">
-        <Analytics />
-        <LegalDisclaimer />
-        <HelpdeskWidget />
         <AuthProvider>
           <LanguageProvider>
+            <Analytics />
+            <LegalDisclaimer />
+            <HelpdeskWidget />
             <DashboardShell>{children}</DashboardShell>
           </LanguageProvider>
         </AuthProvider>
