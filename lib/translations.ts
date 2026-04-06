@@ -91,7 +91,11 @@ export const translations: Record<Language, Record<string, string>> = {
     step_2_legal_desc: "We use the German eWpG (Electronic Securities Act). The BaFin-regulated crypto securities registry irrevocably documents who owns how many tokens. This completely digitizes the traditional certificate ('paper').",
     step_3_legal_title: "Step 3: Minting & Ijarah",
     step_3_legal_desc: "Digital rights are transferred to your crypto wallet. Monthly, the property's rental surpluses (Ijarah) are distributed proportionally and interest-free directly to your wallet (Fiat).",
-    to_primary_market: "To Primary Market"
+    to_primary_market: "To Primary Market",
+    terms: "Terms",
+    privacy: "Privacy",
+    risk_disclosure: "Risk Disclosure",
+    operated_by: "Operated by Amanah Solutions GmbH as a Tied Agent."
   },
   de: {
     dashboard: "Dashboard",
@@ -183,7 +187,11 @@ export const translations: Record<Language, Record<string, string>> = {
     step_2_legal_desc: "Wir nutzen das deutsche eWpG (Gesetz über elektronische Wertpapiere). Die BaFin-regulierte Kryptowertpapierregisterführung dokumentiert unwiderruflich, wem wie viele Token gehören. Dadurch wird die traditionelle Urkunde („Papier“) vollständig digitalisiert.",
     step_3_legal_title: "Schritt 3: Token Minting & Ijarah (Miete)",
     step_3_legal_desc: "Die digitalen Anteilsrechte werden auf ihr Krypto-Wallet überschrieben. Monatlich werden die Mietüberschüsse der Immobilie (Ijarah) anteilig und zinsfrei direkt auf ihr Walletkonto (Fiat) ausgeschüttet.",
-    to_primary_market: "Zum Primärmarkt"
+    to_primary_market: "Zum Primärmarkt",
+    terms: "AGB",
+    privacy: "Datenschutz",
+    risk_disclosure: "Risikohinweise",
+    operated_by: "Betrieben durch die Amanah Solutions GmbH als vertraglich gebundener Vermittler."
   },
   ar: {
     dashboard: "لوحة القيادة",
@@ -275,6 +283,10 @@ export const translations: Record<Language, Record<string, string>> = {
     step_2_legal_desc: "نحن نستخدم قانون الأوراق المالية الإلكترونية الألماني (eWpG). يوثق سجل الأوراق المالية المشفرة الخاضع لرقابة BaFin بشكل نهائي من يملك وكم عدد التوكنات. وهذا يحول الشهادة التقليدية ('الورقية') إلى رقمية بالكامل.",
     step_3_legal_title: "الخطوة 3: السك والإجارة",
     step_3_legal_desc: "تنتقل الحقوق الرقمية إلى محفظتك المشفرة. وشهرياً، يتم توزيع فوائض إيجار العقار (إجارة) بشكل تناسبي وبدون فوائد مباشرة إلى محفظتك (نقد).",
-    to_primary_market: "إلى السوق الأولي"
+    to_primary_market: "إلى السوق الأولي",
+    terms: "الشروط",
+    privacy: "الخصوصية",
+    risk_disclosure: "إخلاء المسؤولية عن المخاطر",
+    operated_by: "تُدار بواسطة Amanah Solutions GmbH كوكيل مرخص."
   }
 };
