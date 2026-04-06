@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 // Mock Database for Properties (Simulated Firestore update)
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const propertyId = params.id;
+    const { id: propertyId } = await params;
     const body = await req.json();
     
     console.log(`[ADMIN] Updating Property ${propertyId}:`, body);

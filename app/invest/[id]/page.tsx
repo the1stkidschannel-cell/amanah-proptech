@@ -35,7 +35,7 @@ import { useLanguage } from "@/context/LanguageContext";
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { t, dir } = useLanguage();
+  const { t, lang, dir } = useLanguage();
   
   const [property, setProperty] = useState<Property | null>(null);
   const [loadingProp, setLoadingProp] = useState(true);

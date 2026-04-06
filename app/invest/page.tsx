@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Building2, MapPin, TrendingUp, ShieldCheck, ArrowRight, Filter, Search, SlidersHorizontal, CheckCircle, Loader2 } from "lucide-react";
 import { getLiveProperties, Property } from "@/lib/firebase/properties";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function InvestPage() {
+  const { t, lang, dir } = useLanguage();
   const [filterType, setFilterType] = useState<string>("Alle");
   const [filterYield, setFilterYield] = useState<number>(0);
   const [search, setSearch] = useState("");
@@ -35,7 +37,6 @@ export default function InvestPage() {
 
   const filteredProperties = useMemo(() => {
     return properties.filter((p) => {
-      // In firebase we set "location" or "city" string so we use location here
       const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.location.toLowerCase().includes(search.toLowerCase());
       const matchType = filterType === "Alle" || p.type.includes(filterType);
       const matchYield = p.yield >= filterYield;
@@ -47,12 +48,12 @@ export default function InvestPage() {
   const uniqueTypes = ["Alle", "Mehrfamilienhaus", "Wohnanlage", "Bürogebäude", "Geschäftshaus"];
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-8 animate-fade-in-up" dir={dir}>
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
         <div className="w-full lg:w-auto">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight">Primärmarkt</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight">{t('invest_market')}</h1>
           <p className="text-gray-400 mt-1 text-xs sm:text-sm">
-            Investieren Sie in tokenisierte Immobilien-SPVs – Genussrechte nach eWpG.
+            {t('invest_desc')}
           </p>
         </div>
         
@@ -62,7 +63,7 @@ export default function InvestPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input 
               type="text" 
-              placeholder="Stadt oder Projekt suchen..." 
+              placeholder={t('search_placeholder')} 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-[#03362a] border border-[#064e3b]/80 text-white text-sm rounded-lg pl-9 pr-4 py-2.5 focus:outline-none focus:border-[#c5a059]"
@@ -83,16 +84,16 @@ export default function InvestPage() {
           <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-5 sticky top-24">
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#064e3b]/40">
               <h3 className="font-semibold text-white flex items-center gap-2">
-                <Filter className="w-4 h-4 text-[#c5a059]" /> Filter
+                <Filter className="w-4 h-4 text-[#c5a059]" /> {t('asset_class')}
               </h3>
               <button onClick={() => {setFilterType("Alle"); setFilterYield(0); setSearch("");}} className="text-xs text-gray-400 hover:text-white">
-                Zurücksetzen
+                {t('filter_reset')}
               </button>
             </div>
 
             {/* Asset Class Filter */}
             <div className="mb-6">
-              <h4 className="text-sm font-medium text-gray-300 mb-3">Asset Klasse</h4>
+              <h4 className="text-sm font-medium text-gray-300 mb-3">{t('asset_class')}</h4>
               <div className="space-y-2">
                 {uniqueTypes.map((type) => (
                   <label key={type} className="flex items-center space-x-2 cursor-pointer group">
@@ -109,7 +110,7 @@ export default function InvestPage() {
             {/* Yield Slider */}
             <div className="mb-4">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-sm font-medium text-gray-300">Min. Rendite</h4>
+                <h4 className="text-sm font-medium text-gray-300">{t('min_yield')}</h4>
                 <span className="text-sm font-bold text-[#c5a059]">&gt;{filterYield.toFixed(1)}%</span>
               </div>
               <input 
@@ -129,14 +130,14 @@ export default function InvestPage() {
             
             <div className="mt-8 pt-4 border-t border-[#064e3b]/40">
                <div className="flex items-center justify-between p-2 bg-[#022c22] rounded-lg border border-[#c5a059]/20 mb-3 cursor-pointer" onClick={() => setShowInstitutionalOnly(!showInstitutionalOnly)}>
-                  <span className="text-[10px] font-bold text-[#c5a059] uppercase tracking-widest">Institutional Assets</span>
+                  <span className="text-[10px] font-bold text-[#c5a059] uppercase tracking-widest">{t('inst_assets')}</span>
                   <div className={`w-8 h-4 rounded-full relative transition-colors ${showInstitutionalOnly ? 'bg-[#c5a059]' : 'bg-gray-800'}`}>
                     <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${showInstitutionalOnly ? 'left-4.5' : 'left-0.5'}`} />
                   </div>
                </div>
                <div className="flex items-center gap-2 p-2 bg-[#022c22] rounded-lg border border-[#064e3b]/30">
                   <ShieldCheck className="w-5 h-5 text-green-400 shrink-0" />
-                  <p className="text-[10px] text-gray-400 leading-tight">Alle {filteredProperties.length} Projekte sind 100% BaFin & AAOIFI geprüft.</p>
+                  <p className="text-[10px] text-gray-400 leading-tight">{t('bafin_check')}</p>
                </div>
             </div>
           </div>
@@ -147,20 +148,20 @@ export default function InvestPage() {
           {loading ? (
              <div className="flex flex-col items-center justify-center p-32">
                 <Loader2 className="w-10 h-10 text-[#c5a059] animate-spin mb-4" />
-                <p className="text-gray-400">Lade Live-Projekte aus dem Blockchain-Register...</p>
+                <p className="text-gray-400">Lade Live-Projekte...</p>
              </div>
           ) : filteredProperties.length === 0 ? (
             <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-12 text-center">
               <Search className="w-12 h-12 text-gray-500 mx-auto mb-4 opacity-50" />
-              <h3 className="text-lg font-bold text-white mb-2">Keine Projekte gefunden</h3>
+              <h3 className="text-lg font-bold text-white mb-2">{t('no_projects')}</h3>
               <p className="text-gray-400 text-sm max-w-sm mx-auto">
-                Mit Ihren aktuellen Filtereinstellungen ({filterType !== "Alle" ? filterType : ""}, &gt;{filterYield}% Rendite) wurden keine passenden Immobilien gefunden.
+                {t('no_projects_desc')}
               </p>
               <button 
                 onClick={() => {setFilterType("Alle"); setFilterYield(0); setSearch("");}}
                 className="mt-6 text-[#c5a059] hover:underline font-medium text-sm"
               >
-                Filter zurücksetzen
+                {t('filter_reset')}
               </button>
             </div>
           ) : (
@@ -171,7 +172,6 @@ export default function InvestPage() {
                   href={`/invest/${p.id}`}
                   className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl overflow-hidden hover:border-[#c5a059]/30 transition-all group block shadow-lg"
                 >
-                  {/* Header image */}
                   <div className="h-48 relative bg-gray-900 overflow-hidden">
                     <Image
                       src={p.image}
@@ -181,7 +181,6 @@ export default function InvestPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#03362a] via-[#03362a]/20 to-transparent" />
                     
-                    {/* Status & Sharia Badges */}
                     <div className="absolute top-3 right-3 bg-[#064e3b]/90 backdrop-blur-sm text-[#d4af37] text-[10px] uppercase font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 z-10">
                       <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
                       <span>{p.status === "Live" ? "Funding aktiv" : "Geschlossen"}</span>
@@ -191,7 +190,6 @@ export default function InvestPage() {
                       <span>AAOIFI</span>
                     </div>
                     
-                    {/* Title overlay */}
                     <div className="absolute bottom-3 left-4 right-4 z-10">
                       <h3 className="text-lg font-bold text-white group-hover:text-[#d4af37] transition-colors line-clamp-1">{p.name}</h3>
                       <p className="text-xs text-gray-300 flex items-center space-x-1 mt-0.5">
@@ -204,7 +202,7 @@ export default function InvestPage() {
                   <div className="p-5 space-y-4">
                     <div className="grid grid-cols-3 gap-1 sm:gap-2 text-center divide-x divide-[#064e3b]/40 bg-[#022c22] rounded-lg py-2">
                        <div>
-                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">Volumen</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">{t('volume')}</p>
                         <p className="text-[11px] sm:text-sm font-bold text-white">{(p.targetVolume / 1000000).toFixed(1)}M</p>
                       </div>
                       <div>
@@ -217,11 +215,10 @@ export default function InvestPage() {
                       </div>
                     </div>
 
-                    {/* Progress bar */}
                     <div>
                       <div className="flex justify-between text-xs text-gray-400 mb-1.5 px-1">
                         <span>Funded: <strong className="text-white">{p.funded}%</strong></span>
-                        <span>ab <strong className="text-white">{new Intl.NumberFormat("de-DE").format(p.minInvest)} €</strong></span>
+                        <span>ab <strong className="text-white">{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(p.minInvest)} €</strong></span>
                       </div>
                       <div className="w-full bg-[#022c22] rounded-full h-1.5 overflow-hidden">
                         <div
@@ -232,7 +229,7 @@ export default function InvestPage() {
                     </div>
 
                     <div className="w-full border border-[#064e3b] text-white text-sm font-medium py-2.5 rounded-lg transition-all flex items-center justify-center space-x-2 group-hover:bg-[#c5a059] group-hover:border-[#c5a059]">
-                      <span>Details & Investieren</span>
+                      <span>{t('details_invest')}</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>

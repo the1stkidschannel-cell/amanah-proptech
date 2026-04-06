@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
   Building2, 
   ArrowLeft, 
@@ -16,8 +16,8 @@ import {
   FileText
 } from "lucide-react";
 
-export default function PropertyPerformancePage({ params }: { params: { id: string } }) {
-  const propertyId = params.id;
+export default function PropertyPerformancePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id: propertyId } = React.use(params);
   
   // Real world: fetch data from Firestore
   const [propertyData, setPropertyData] = useState<any>({
