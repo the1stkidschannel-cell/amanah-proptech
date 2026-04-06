@@ -1,7 +1,9 @@
 import os
 import time
-import csv
 import random
+import csv
+import requests
+import json
 # Using Selenium for navigation and PyAutoGUI to evade script detection and clipboard monitoring
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -106,6 +108,19 @@ I would love to show you our live environment in a 15-minute call. When works fo
                 pyautogui.hotkey('ctrl', 'enter')
                 print(f"[SENT] Fired Outreach to {lead['Email']}")
                 time.sleep(4)
+                
+            # Send Webhook to Amanah CRM
+            try:
+                webhook_url = "http://localhost:3000/api/outreach/leads"
+                payload = {
+                    "action": "BOT_CONTACTED_LEAD",
+                    "company": lead['Company']
+                }
+                headers = {'Content-Type': 'application/json'}
+                requests.post(webhook_url, data=json.dumps(payload), headers=headers)
+                print(f"[CRM SYNC] successfully updated pipeline for {lead['Company']}")
+            except Exception as e:
+                print(f"[CRM SYNC ERROR] Could not reach Next.js backend: {e}")
                 
         except Exception as e:
             print(f"[ERROR] Failed automation for {lead['Email']}: {e}")
