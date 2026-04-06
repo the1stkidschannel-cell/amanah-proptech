@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import DashboardShell from "@/components/DashboardShell";
 import Analytics from "@/components/Analytics";
 import LegalDisclaimer from "@/components/LegalDisclaimer";
+import HelpdeskWidget from "@/components/HelpdeskWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-[#022c22] text-white">
         <Analytics />
         <LegalDisclaimer />
+        <HelpdeskWidget />
         <AuthProvider>
           <DashboardShell>{children}</DashboardShell>
         </AuthProvider>
