@@ -424,6 +424,12 @@ export default function OnboardingPage() {
                 </p>
                 <div className="flex justify-center gap-4">
                   <button
+                    onClick={() => router.push("/onboarding/compliance")}
+                    className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl text-lg font-bold transition-all shadow-xl shadow-blue-500/20"
+                  >
+                    WpHG Risikoprofil ausfüllen →
+                  </button>
+                  <button
                     onClick={() => router.push("/invest")}
                     className="bg-[#c5a059] hover:bg-[#b08d48] text-white px-8 py-4 rounded-xl text-lg font-bold transition-all shadow-xl shadow-[#c5a059]/20"
                   >
