@@ -1,0 +1,194 @@
+[
+  {
+    "ts": "2026-04-06T16:50:05.010Z",
+    "phase": "SYSTEM",
+    "status": "BOOT",
+    "msg": "500M Engine gestartet. Dry-Run: true | Interval: 4h"
+  },
+  {
+    "ts": "2026-04-06T16:50:05.035Z",
+    "phase": "HARVEST",
+    "status": "INFO",
+    "msg": "Starting institutional lead scraping (DACH/MENA)..."
+  },
+  {
+    "ts": "2026-04-06T16:50:05.098Z",
+    "phase": "HARVEST",
+    "status": "OK",
+    "msg": "[NEXT ACTION] Ready for outreach_bot.js processing."
+  },
+  {
+    "ts": "2026-04-06T16:50:06.113Z",
+    "phase": "AUDIT",
+    "status": "INFO",
+    "msg": "Running financial feasibility audit on deal pipeline..."
+  },
+  {
+    "ts": "2026-04-06T16:50:06.200Z",
+    "phase": "AUDIT",
+    "status": "OK",
+    "msg": "Gap to $500M Goal: 478.60M €"
+  },
+  {
+    "ts": "2026-04-06T16:50:07.210Z",
+    "phase": "OUTREACH",
+    "status": "INFO",
+    "msg": "Initiating B2B email outreach via Resend API [DRY-RUN]..."
+  },
+  {
+    "ts": "2026-04-06T16:50:07.286Z",
+    "phase": "OUTREACH",
+    "status": "OK",
+    "msg": "Outreach cycle complete."
+  },
+  {
+    "ts": "2026-04-06T16:50:08.293Z",
+    "phase": "ANALYTICS",
+    "status": "INFO",
+    "msg": "Fetching pipeline KPIs from CRM..."
+  },
+  {
+    "ts": "2026-04-06T16:50:08.370Z",
+    "phase": "ANALYTICS",
+    "status": "WARN",
+    "msg": "Next.js app offline – skipping live KPI fetch. Start with: npm run dev"
+  },
+  {
+    "ts": "2026-04-06T16:50:08.371Z",
+    "phase": "ANALYTICS",
+    "status": "INFO",
+    "msg": "Offline CSV: 15 total leads in pipeline."
+  },
+  {
+    "ts": "2026-04-06T16:50:08.372Z",
+    "phase": "SYSTEM",
+    "status": "DONE",
+    "msg": "Run-once Mode: Engine beendet."
+  },
+  {
+    "ts": "2026-04-06T16:56:52.682Z",
+    "phase": "SYSTEM",
+    "status": "BOOT",
+    "msg": "500M Engine gestartet. Dry-Run: true | Interval: 4h"
+  },
+  {
+    "ts": "2026-04-06T16:56:52.708Z",
+    "phase": "HARVEST",
+    "status": "INFO",
+    "msg": "Starting institutional lead scraping (DACH/MENA)..."
+  },
+  {
+    "ts": "2026-04-06T16:56:52.785Z",
+    "phase": "HARVEST",
+    "status": "OK",
+    "msg": "[NEXT ACTION] Ready for outreach_bot.js processing."
+  },
+  {
+    "ts": "2026-04-06T16:56:53.789Z",
+    "phase": "AUDIT",
+    "status": "INFO",
+    "msg": "Running financial feasibility audit on deal pipeline..."
+  },
+  {
+    "ts": "2026-04-06T16:56:53.875Z",
+    "phase": "AUDIT",
+    "status": "OK",
+    "msg": "Gap to $500M Goal: 478.60M €"
+  },
+  {
+    "ts": "2026-04-06T16:56:54.891Z",
+    "phase": "OUTREACH",
+    "status": "INFO",
+    "msg": "Initiating B2B email outreach via Resend API [DRY-RUN]..."
+  },
+  {
+    "ts": "2026-04-06T16:56:54.957Z",
+    "phase": "OUTREACH",
+    "status": "OK",
+    "msg": "Outreach cycle complete."
+  },
+  {
+    "ts": "2026-04-06T16:56:55.965Z",
+    "phase": "ANALYTICS",
+    "status": "INFO",
+    "msg": "Fetching pipeline KPIs from CRM..."
+  },
+  {
+    "ts": "2026-04-06T16:56:56.025Z",
+    "phase": "ANALYTICS",
+    "status": "WARN",
+    "msg": "Next.js app offline – skipping live KPI fetch. Start with: npm run dev"
+  },
+  {
+    "ts": "2026-04-06T16:56:56.026Z",
+    "phase": "ANALYTICS",
+    "status": "INFO",
+    "msg": "Offline CSV: 57 total leads in pipeline."
+  },
+  {
+    "ts": "2026-04-06T16:56:56.027Z",
+    "phase": "SYSTEM",
+    "status": "DONE",
+    "msg": "Run-once Mode: Engine beendet."
+  },
+  {
+    "ts": "2026-04-06T17:18:40.188Z",
+    "phase": "SYSTEM",
+    "status": "BOOT",
+    "msg": "500M Engine gestartet. Dry-Run: false | Interval: 4h"
+  },
+  {
+    "ts": "2026-04-06T17:18:40.206Z",
+    "phase": "HARVEST",
+    "status": "INFO",
+    "msg": "Starting institutional lead scraping (DACH/MENA)..."
+  },
+  {
+    "ts": "2026-04-06T17:18:40.273Z",
+    "phase": "HARVEST",
+    "status": "OK",
+    "msg": "[NEXT ACTION] Ready for outreach_bot.js processing."
+  },
+  {
+    "ts": "2026-04-06T17:18:41.289Z",
+    "phase": "AUDIT",
+    "status": "INFO",
+    "msg": "Running financial feasibility audit on deal pipeline..."
+  },
+  {
+    "ts": "2026-04-06T17:18:41.372Z",
+    "phase": "AUDIT",
+    "status": "OK",
+    "msg": "Gap to $500M Goal: 478.60M €"
+  },
+  {
+    "ts": "2026-04-06T17:18:42.375Z",
+    "phase": "OUTREACH",
+    "status": "INFO",
+    "msg": "Initiating B2B email outreach via Resend API..."
+  },
+  {
+    "ts": "2026-04-06T17:18:42.443Z",
+    "phase": "OUTREACH",
+    "status": "OK",
+    "msg": "Outreach cycle complete."
+  },
+  {
+    "ts": "2026-04-06T17:18:43.458Z",
+    "phase": "ANALYTICS",
+    "status": "INFO",
+    "msg": "Fetching pipeline KPIs from CRM..."
+  },
+  {
+    "ts": "2026-04-06T17:18:43.510Z",
+    "phase": "ANALYTICS",
+    "status": "WARN",
+    "msg": "Next.js app offline – skipping live KPI fetch. Start with: npm run dev"
+  },
+  {
+    "ts": "2026-04-06T17:18:43.512Z",
+    "phase": "ANALYTICS",
+    "status": "INFO",
+    "msg": "Offline CSV: 57 total leads in pipeline."
+  }
+]

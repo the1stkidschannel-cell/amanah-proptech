@@ -30,6 +30,7 @@ export interface Property {
   annualNetIncome: number;
   minInvest: number;
   maxInvest: number;
+  isInstitutional?: boolean;
   units: number;
   highlights: string[];
 }

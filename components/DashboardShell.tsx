@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -15,42 +16,30 @@ import {
   LogOut,
   Loader2,
   Settings,
-  BadgeDollarSign,
-  UserPen,
-  GraduationCap,
   Gift,
-  BriefcaseBusiness,
-  Cpu,
-  Mail,
+  GraduationCap,
   Bot
 } from "lucide-react";
 
-const navItems = [
-  { label: "Übersicht", href: "/", icon: LayoutDashboard },
-  { label: "Primärmarkt", href: "/invest", icon: Building2 },
-  { label: "Sekundärmarkt", href: "/trade", icon: ArrowLeftRight },
-  { label: "Halal Wallet", href: "/wallet", icon: Wallet },
-  { label: "B2B Outreach", href: "/admin/outreach", icon: Mail },
-  { label: "Freunde werben", href: "/referral", icon: Gift },
-  { label: "Institutionell", href: "/institutional", icon: BriefcaseBusiness },
-  { label: "Amanah Academy", href: "/academy", icon: GraduationCap },
-  { label: "Profil & KYC", href: "/onboarding", icon: UserPen },
-  { label: "Sharia AI", href: "/compliance", icon: ShieldCheck },
-  { label: "Token Factory", href: "/admin/properties/create", icon: Cpu },
-  { label: "SaaS Pricing", href: "/pricing", icon: BadgeDollarSign },
-  { label: "Portfolio Automation", href: "/admin/automation", icon: Bot },
-  { label: "Admin", href: "/admin", icon: Settings },
-];
-
 import LandingPage from "./LandingPage";
 
-/* ──────────────────────── Dashboard Shell ──────────────────────── */
+const navItems = [
+  { labelKey: "dashboard", href: "/", icon: LayoutDashboard },
+  { labelKey: "invest", href: "/invest", icon: Building2 },
+  { labelKey: "trade", href: "/trade", icon: ArrowLeftRight },
+  { labelKey: "wallet", href: "/wallet", icon: Wallet },
+  { labelKey: "support", href: "/admin/support", icon: Bot },
+  { labelKey: "referral", href: "/referral", icon: Gift },
+  { labelKey: "academy", href: "/academy", icon: GraduationCap },
+  { labelKey: "admin", href: "/admin", icon: Settings },
+];
+
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, loading, logout } = useAuth();
+  const { lang, setLang, t, dir } = useLanguage();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  /* Loading spinner */
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#022c22]">
@@ -59,16 +48,14 @@ export default function DashboardShell({ children }: { children: React.ReactNode
     );
   }
 
-  /* Not authenticated */
   if (!user) return <LandingPage />;
 
-  /* Sidebar content (reused for desktop & mobile) */
   const SidebarContent = (
-    <>
+    <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center space-x-2 px-5 py-6 border-b border-[#064e3b]/40">
         <div className="w-8 h-8 bg-[#c5a059] rounded-lg flex items-center justify-center">
-          <Building2 className="text-white w-4 h-4" />
+          <Building2 className="text-[#022c22] w-4 h-4 shadow-sm" />
         </div>
         <span className="text-lg font-bold text-white tracking-tight">
           Amanah<span className="text-[#c5a059]">PropTech</span>
@@ -91,35 +78,52 @@ export default function DashboardShell({ children }: { children: React.ReactNode
               }`}
             >
               <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              <span>{t(item.labelKey)}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* User & logout */}
-      <div className="px-4 py-4 border-t border-[#064e3b]/40">
-        <div className="flex items-center justify-between">
-          <div className="min-w-0">
+      {/* Language Switcher & User */}
+      <div className="px-3 py-4 border-t border-[#064e3b]/40 space-y-4">
+        {/* Language Switcher */}
+        <div className="flex items-center justify-between bg-[#022c22] border border-[#064e3b] rounded-xl p-1">
+          {(['de', 'en', 'ar'] as const).map((l) => (
+            <button
+              key={l}
+              onClick={() => setLang(l)}
+              className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${
+                lang === l 
+                  ? "bg-[#c5a059] text-[#022c22] shadow-sm" 
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              {l.toUpperCase()}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center space-x-3 px-2 py-2">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#c5a059] to-[#064e3b] border border-white/10 shrink-0" />
+          <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">
               {user.displayName || "Investor"}
             </p>
-            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+            <p className="text-[10px] text-gray-500 truncate">{user.email}</p>
           </div>
           <button
             onClick={logout}
             className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-            title="Abmelden"
           >
             <LogOut className="w-4 h-4" />
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 
   return (
-    <div className="flex h-screen bg-[#022c22] overflow-hidden">
+    <div className="flex h-screen bg-[#022c22] overflow-hidden" dir={dir}>
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex lg:flex-col w-64 bg-[#03362a] border-r border-[#064e3b]/40 shrink-0">
         {SidebarContent}
@@ -150,14 +154,19 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <header className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#03362a] border-b border-[#064e3b]/40">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-[#064e3b]/30 transition-colors"
+            className="p-2 rounded-lg text-gray-400 hover:text-white"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="text-sm font-bold text-white">
-            Amanah<span className="text-[#c5a059]">PropTech</span>
+          <span className="text-sm font-bold text-white uppercase tracking-widest">
+            Amanah
           </span>
-          <div className="w-9" /> {/* spacer */}
+          <button 
+            onClick={() => setLang(lang === 'ar' ? 'de' : 'ar')}
+            className="w-8 h-8 rounded-lg bg-[#022c22] border border-[#064e3b] text-[10px] font-bold text-[#c5a059]"
+          >
+            {lang.toUpperCase()}
+          </button>
         </header>
 
         <main className="flex-1 p-6 lg:p-8 overflow-auto">{children}</main>

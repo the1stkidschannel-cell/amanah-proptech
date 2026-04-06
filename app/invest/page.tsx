@@ -13,6 +13,7 @@ export default function InvestPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showInstitutionalOnly, setShowInstitutionalOnly] = useState(false);
 
   // Load live properties from Firestore on mount
   useState(() => {
@@ -38,18 +39,19 @@ export default function InvestPage() {
       const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.location.toLowerCase().includes(search.toLowerCase());
       const matchType = filterType === "Alle" || p.type.includes(filterType);
       const matchYield = p.yield >= filterYield;
-      return matchSearch && matchType && matchYield;
+      const matchInstitutional = !showInstitutionalOnly || p.targetVolume >= 5000000 || p.isInstitutional;
+      return matchSearch && matchType && matchYield && matchInstitutional;
     });
-  }, [search, filterType, filterYield]);
+  }, [search, filterType, filterYield, showInstitutionalOnly, properties]);
 
   const uniqueTypes = ["Alle", "Mehrfamilienhaus", "Wohnanlage", "Bürogebäude", "Geschäftshaus"];
 
   return (
     <div className="space-y-8 animate-fade-in-up">
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-white">Primärmarkt</h1>
-          <p className="text-gray-400 mt-1">
+        <div className="w-full lg:w-auto">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight">Primärmarkt</h1>
+          <p className="text-gray-400 mt-1 text-xs sm:text-sm">
             Investieren Sie in tokenisierte Immobilien-SPVs – Genussrechte nach eWpG.
           </p>
         </div>
@@ -126,9 +128,15 @@ export default function InvestPage() {
             </div>
             
             <div className="mt-8 pt-4 border-t border-[#064e3b]/40">
+               <div className="flex items-center justify-between p-2 bg-[#022c22] rounded-lg border border-[#c5a059]/20 mb-3 cursor-pointer" onClick={() => setShowInstitutionalOnly(!showInstitutionalOnly)}>
+                  <span className="text-[10px] font-bold text-[#c5a059] uppercase tracking-widest">Institutional Assets</span>
+                  <div className={`w-8 h-4 rounded-full relative transition-colors ${showInstitutionalOnly ? 'bg-[#c5a059]' : 'bg-gray-800'}`}>
+                    <div className={`absolute top-0.5 w-3 h-3 bg-white rounded-full transition-all ${showInstitutionalOnly ? 'left-4.5' : 'left-0.5'}`} />
+                  </div>
+               </div>
                <div className="flex items-center gap-2 p-2 bg-[#022c22] rounded-lg border border-[#064e3b]/30">
                   <ShieldCheck className="w-5 h-5 text-green-400 shrink-0" />
-                  <p className="text-[10px] text-gray-400 leading-tight">Alle {filteredProperties.length} angezeigten Projekte sind 100% BaFin & AAOIFI geprüft.</p>
+                  <p className="text-[10px] text-gray-400 leading-tight">Alle {filteredProperties.length} Projekte sind 100% BaFin & AAOIFI geprüft.</p>
                </div>
             </div>
           </div>
@@ -194,18 +202,18 @@ export default function InvestPage() {
                   </div>
 
                   <div className="p-5 space-y-4">
-                    <div className="grid grid-cols-3 gap-2 text-center divide-x divide-[#064e3b]/40 bg-[#022c22] rounded-lg py-2">
+                    <div className="grid grid-cols-3 gap-1 sm:gap-2 text-center divide-x divide-[#064e3b]/40 bg-[#022c22] rounded-lg py-2">
                        <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider">Volumen</p>
-                        <p className="text-sm font-bold text-white">{(p.targetVolume / 1000000).toFixed(1)}M</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">Volumen</p>
+                        <p className="text-[11px] sm:text-sm font-bold text-white">{(p.targetVolume / 1000000).toFixed(1)}M</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider">Rendite p.a.</p>
-                        <p className="text-sm font-bold text-[#d4af37]">{p.yield}%</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">Rendite</p>
+                        <p className="text-[11px] sm:text-sm font-bold text-[#d4af37]">{p.yield}%</p>
                       </div>
                       <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider">Laufzeit</p>
-                        <p className="text-sm font-bold text-white">{p.holdingPeriod.split(" ")[0]}J</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">Laufzeit</p>
+                        <p className="text-[11px] sm:text-sm font-bold text-white">{p.holdingPeriod.split(" ")[0]}J</p>
                       </div>
                     </div>
 

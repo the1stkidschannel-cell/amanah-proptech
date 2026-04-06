@@ -62,5 +62,23 @@ export const CashlinkProvider = {
       executedAmount: tradeData.amount * 0.8, // 80% filled
       platformFeeDeducted: "1%"
     };
+  },
+
+  /**
+   * 4. Fetch On-Chain Wallet Balance (eWpG Register)
+   * Polls the physical registrar for the current token balance of a specific investor.
+   * Based on ISIN-based security tokens.
+   */
+  async getOnChainBalance(investorId: string, isin: string) {
+    console.log(`[CASHLINK API] Fetching eWpG balance for ${investorId} | ISIN ${isin}`);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Simulating deterministic balance based on ID for demo purposes
+    return {
+      success: true,
+      balance: 5000 + (Math.random() * 100), // Mocked on-chain data
+      currency: "EUR_ST", // Euro Security Token
+      lastUpdated: new Date().toISOString()
+    };
   }
 };

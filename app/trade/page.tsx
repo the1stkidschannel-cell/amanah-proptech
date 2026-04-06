@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ArrowLeftRight, TrendingUp, TrendingDown, Search, Filter, AlertCircle, ShieldCheck, Loader2, CheckCircle2 } from "lucide-react";
+import { OrderBook } from "@/components/trade/OrderBook";
+import { RecentTrades } from "@/components/trade/RecentTrades";
 
 // Mock data for the secondary market order book
 const activeListings = [
@@ -115,70 +117,11 @@ export default function TradePage() {
               <button className="text-gray-400 hover:text-[#c5a059] transition-colors"><Filter className="w-4 h-4" /></button>
             </div>
             
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#022c22]/50 border-b border-[#064e3b]/30 text-xs text-gray-500 uppercase tracking-wider">
-                    <th className="px-5 py-3 font-semibold">Asset</th>
-                    <th className="px-5 py-3 font-semibold">Menge</th>
-                    <th className="px-5 py-3 font-semibold">Preis / Token</th>
-                    <th className="px-5 py-3 font-semibold">Volumen</th>
-                    <th className="px-5 py-3 font-semibold text-right">Aktion</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[#064e3b]/20">
-                  {filteredListings.map(listing => {
-                    const priceDiff = ((listing.askPrice - listing.originalPrice) / listing.originalPrice) * 100;
-                    return (
-                      <tr key={listing.id} className="hover:bg-[#064e3b]/10 transition-colors">
-                        <td className="px-5 py-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#c5a059] to-[#854d0e] flex items-center justify-center text-white text-[10px] font-bold">
-                              {listing.symbol}
-                            </div>
-                            <div>
-                              <p className="text-sm font-bold text-white">{listing.symbol}</p>
-                              <p className="text-[10px] text-gray-500 w-32 truncate">{listing.propertyName}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 text-sm text-gray-300">
-                          {listing.tokens} <span className="text-[10px] text-gray-600">Stk</span>
-                        </td>
-                        <td className="px-5 py-4">
-                          <p className="text-sm font-bold text-white">{new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(listing.askPrice)}</p>
-                          <p className={`text-[10px] font-medium flex items-center ${priceDiff > 0 ? "text-green-400" : priceDiff < 0 ? "text-red-400" : "text-gray-500"}`}>
-                            {priceDiff > 0 ? <TrendingUp className="w-3 h-3 mr-0.5"/> : priceDiff < 0 ? <TrendingDown className="w-3 h-3 mr-0.5"/> : null}
-                            {priceDiff > 0 ? "+" : ""}{priceDiff.toFixed(2)}% vs Issue
-                          </p>
-                        </td>
-                        <td className="px-5 py-4 text-sm font-medium text-gray-300">
-                          {new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(listing.volume)}
-                        </td>
-                        <td className="px-5 py-4 text-right">
-                           <button 
-                             onClick={() => handleExecuteTrade(listing)}
-                             disabled={processingTrade === listing.id}
-                             className="bg-[#c5a059] hover:bg-[#b08d48] disabled:opacity-50 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-shadow shadow-md shadow-[#c5a059]/20 flex items-center justify-center min-w-[80px]"
-                           >
-                              {processingTrade === listing.id ? (
-                                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                              ) : (
-                                activeTab === "buy" ? "Kaufen" : "Verkaufen"
-                              )}
-                           </button>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-              {filteredListings.length === 0 && (
-                <div className="p-8 text-center text-gray-500 text-sm">
-                  Keine passenden Angebote gefunden.
-                </div>
-              )}
-            </div>
+            <OrderBook 
+              listings={filteredListings} 
+              onTrade={handleExecuteTrade} 
+              processingId={processingTrade} 
+            />
           </div>
         </div>
 
@@ -206,23 +149,7 @@ export default function TradePage() {
           </div>
 
           {/* Recent Trades Stream */}
-          <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-5">
-            <h3 className="font-semibold text-white mb-4">Letzte Trades</h3>
-            <div className="space-y-3">
-              {recentTrades.map((trade) => (
-                <div key={trade.id} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-[#c5a059] font-bold w-8">{trade.symbol}</span>
-                    <span className="text-gray-400 text-xs">{trade.time}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-white font-medium">{trade.amount} Stk</span>
-                    <span className="text-gray-500 text-xs ml-2">@ €{trade.price.toFixed(2)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <RecentTrades trades={recentTrades} />
 
           {/* Sharia Compliance Note */}
           <div className="bg-[#022c22] border border-green-500/20 rounded-xl p-4 flex items-start space-x-3">

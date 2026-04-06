@@ -26,13 +26,16 @@ import {
   Wallet,
   ExternalLink,
   Database,
-  Loader2
+  Loader2,
+  RefreshCcw
 } from "lucide-react";
 import { getPropertyById, Property } from "@/lib/firebase/properties";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PropertyDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { t, dir } = useLanguage();
   
   const [property, setProperty] = useState<Property | null>(null);
   const [loadingProp, setLoadingProp] = useState(true);
@@ -62,25 +65,26 @@ export default function PropertyDetailPage() {
   const [showAllDocs, setShowAllDocs] = useState(false);
   const [toast, setToast] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   if (loadingProp) {
     return (
       <div className="flex flex-col items-center justify-center py-32 animate-fade-in-up">
         <Loader2 className="w-16 h-16 text-[#c5a059] mb-4 animate-spin" />
-        <h2 className="text-2xl font-bold text-white mb-2">Immobilie wird geladen...</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">Portfolio Loading...</h2>
       </div>
     );
   }
 
   if (!property) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 animate-fade-in-up">
+      <div className="flex flex-col items-center justify-center py-32 animate-fade-in-up" dir={dir}>
         <Building2 className="w-16 h-16 text-gray-600 mb-4" />
-        <h2 className="text-2xl font-bold text-white mb-2">Immobilie nicht gefunden</h2>
-        <p className="text-gray-400 mb-6">Das angeforderte Investment existiert nicht.</p>
+        <h2 className="text-2xl font-bold text-white mb-2">Not Found</h2>
+        <p className="text-gray-400 mb-6">Investment does not exist.</p>
         <button onClick={() => router.push("/invest")} className="text-[#c5a059] hover:underline flex items-center space-x-1">
-          <ArrowLeft className="w-4 h-4" />
-          <span>Zurück zum Primärmarkt</span>
+          <ArrowLeft className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+          <span>Back to Market</span>
         </button>
       </div>
     );
@@ -107,11 +111,11 @@ export default function PropertyDetailPage() {
       const data = await res.json();
       
       setLoading(false);
-      setToast(`Alhamdulillah! ${tokensForAmount} ${property.tokenSymbol}-Token gemintet. Tx: ${data.onChainTx?.substring(0, 10)}...`);
+      setToast(`Alhamdulillah! ${tokensForAmount} ${property.tokenSymbol} Tokens minted. Tx: ${data.onChainTx?.substring(0, 10)}...`);
       setTimeout(() => setToast(""), 6000);
     } catch (e) {
       setLoading(false);
-      setToast("Fehler bei der Krypto-Übertragung.");
+      setToast("Error in On-Chain Settlement.");
     }
   };
 
@@ -124,119 +128,133 @@ export default function PropertyDetailPage() {
   const docsToShow = showAllDocs ? property.documents : property.documents.slice(0, 3);
 
   return (
-    <div className="space-y-8 animate-fade-in-up">
+    <div className="space-y-8 animate-fade-in-up" dir={dir}>
       {/* Back nav */}
       <button
         onClick={() => router.push("/invest")}
         className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors text-sm"
       >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Zurück zum Primärmarkt</span>
+        <ArrowLeft className={`w-4 h-4 ${dir === 'rtl' ? 'rotate-180' : ''}`} />
+        <span>Primary Market</span>
       </button>
 
       {/* Hero */}
-      <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-2xl overflow-hidden">
-        <div className="relative h-56 lg:h-72">
+      <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="relative h-56 lg:h-80">
           <Image src={property.image} alt={property.name} fill className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#03362a] via-transparent to-transparent" />
           {/* Status badge */}
-          <div className="absolute top-4 right-4 bg-[#064e3b]/90 text-[#d4af37] text-xs font-bold px-4 py-1.5 rounded-full flex items-center space-x-1.5 backdrop-blur-sm z-10">
+          <div className={`absolute top-4 ${dir === 'rtl' ? 'left-4' : 'right-4'} bg-[#064e3b]/90 text-[#d4af37] text-[10px] font-bold px-4 py-1.5 rounded-full flex items-center space-x-1.5 backdrop-blur-sm z-10 uppercase tracking-widest border border-[#c5a059]/30`}>
             <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            <span>Funding aktiv</span>
+            <span>Funding active</span>
           </div>
           {/* Sharia badge */}
-          <div className="absolute top-4 left-4 bg-green-600/90 text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center space-x-1.5 backdrop-blur-sm z-10">
+          <div className={`absolute top-4 ${dir === 'rtl' ? 'right-4' : 'left-4'} bg-green-600/90 text-white text-[10px] font-bold px-4 py-1.5 rounded-full flex items-center space-x-1.5 backdrop-blur-sm z-10 uppercase tracking-widest`}>
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>AAOIFI Compliant</span>
           </div>
         </div>
 
-        <div className="p-6 lg:p-8 -mt-8 relative z-10">
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1">{property.name}</h1>
-          <p className="flex items-center space-x-1.5 text-gray-400 text-sm mb-4">
-            <MapPin className="w-4 h-4" />
-            <span>{property.location} · {property.type}</span>
-          </p>
+        <div className="p-6 lg:p-10 -mt-10 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">{property.name}</h1>
+              <p className="flex items-center space-x-1.5 text-gray-400 text-sm">
+                <MapPin className="w-4 h-4" />
+                <span>{property.location} · {property.type}</span>
+              </p>
+            </div>
+            <div className="bg-[#022c22] border border-[#064e3b] px-4 py-2 rounded-xl flex items-center gap-3">
+               <div>
+                  <p className="text-[10px] text-gray-500 uppercase font-bold">ISIN (eWpG)</p>
+                  <p className="text-sm font-mono text-[#c5a059]">DE000A3G2M11</p>
+               </div>
+               <Database className="w-5 h-5 text-blue-400 opacity-50" />
+            </div>
+          </div>
 
           {/* Progress */}
-          <div className="mb-6">
-            <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-400">Reserviert: <span className="text-white font-semibold">{property.funded}%</span></span>
-              <span className="text-gray-400">Ziel: <span className="text-white font-semibold">{new Intl.NumberFormat("de-DE").format(property.targetVolume)} €</span></span>
+          <div className="mb-8">
+            <div className="flex justify-between text-xs mb-2">
+              <span className="text-gray-400 font-medium uppercase tracking-wider">Reserved: <span className="text-white font-bold">{property.funded}%</span></span>
+              <span className="text-gray-400 font-medium uppercase tracking-wider">Target: <span className="text-white font-bold">{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.targetVolume)} €</span></span>
             </div>
-            <div className="w-full bg-[#022c22] rounded-full h-3 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#c5a059] to-[#d4af37] h-3 rounded-full transition-all relative" style={{ width: `${property.funded}%` }}>
-                <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse" />
+            <div className="w-full bg-[#022c22] rounded-full h-4 overflow-hidden border border-[#064e3b]/30">
+              <div className="bg-gradient-to-r from-[#c5a059] via-[#d4af37] to-[#c5a059] h-full rounded-full transition-all relative" style={{ width: `${property.funded}%` }}>
+                <div className="absolute inset-0 bg-white/10 rounded-full animate-pulse" />
               </div>
             </div>
-            <div className="flex justify-between text-xs text-gray-500 mt-1.5">
-              <span>{new Intl.NumberFormat("de-DE").format(Math.round(property.targetVolume * property.funded / 100))} € reserviert</span>
-              <span>{new Intl.NumberFormat("de-DE").format(property.targetVolume - Math.round(property.targetVolume * property.funded / 100))} € verfügbar</span>
+            <div className="flex justify-between text-[10px] text-gray-500 mt-2 font-bold uppercase tracking-tighter">
+              <span>{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(Math.round(property.targetVolume * property.funded / 100))} € allocated</span>
+              <span>{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.targetVolume - Math.round(property.targetVolume * property.funded / 100))} € remaining</span>
             </div>
           </div>
 
           {/* KPI Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div className="bg-[#022c22] rounded-xl p-4 text-center">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Rendite p.a.</p>
-              <p className="text-xl font-bold text-[#d4af37]">{property.yield} %</p>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-[#022c22] border border-[#064e3b]/30 rounded-2xl p-5 text-center transition-all hover:border-[#c5a059]/40">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1.5 font-bold">Expected ROI p.a.</p>
+              <p className="text-2xl font-bold text-[#d4af37]">{property.yield} %</p>
             </div>
-            <div className="bg-[#022c22] rounded-xl p-4 text-center">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Token Preis</p>
-              <p className="text-xl font-bold text-white">{property.tokenPrice} €</p>
+            <div className="bg-[#022c22] border border-[#064e3b]/30 rounded-2xl p-5 text-center transition-all hover:border-[#c5a059]/40">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1.5 font-bold">Token Price</p>
+              <p className="text-2xl font-bold text-white">{property.tokenPrice} €</p>
             </div>
-            <div className="bg-[#022c22] rounded-xl p-4 text-center">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Wohneinheiten</p>
-              <p className="text-xl font-bold text-white">{property.units} WE</p>
+            <div className="bg-[#022c22] border border-[#064e3b]/30 rounded-2xl p-5 text-center transition-all hover:border-[#c5a059]/40">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1.5 font-bold">Units</p>
+              <p className="text-2xl font-bold text-white">{property.units} WE</p>
             </div>
-            <div className="bg-[#022c22] rounded-xl p-4 text-center">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Haltefrist</p>
-              <p className="text-xl font-bold text-white">{property.holdingPeriod}</p>
+            <div className="bg-[#022c22] border border-[#064e3b]/30 rounded-2xl p-5 text-center transition-all hover:border-[#c5a059]/40">
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-1.5 font-bold">Holding Period</p>
+              <p className="text-2xl font-bold text-white">{property.holdingPeriod}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column: Details */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-8">
           {/* Description */}
-          <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-6">
-            <h2 className="text-lg font-bold text-white mb-4">Investmentübersicht</h2>
-            <p className="text-gray-300 leading-relaxed text-sm whitespace-pre-line">{property.description}</p>
+          <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+               <Info className="w-5 h-5 text-[#c5a059]" />
+               {t('invest')} Overview
+            </h2>
+            <p className="text-gray-300 leading-loose text-sm whitespace-pre-line">{property.description}</p>
 
-            <div className="mt-6 space-y-2">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
               {property.highlights.map((h, i) => (
-                <div key={i} className="flex items-start space-x-2">
-                  <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 shrink-0" />
-                  <span className="text-sm text-gray-300">{h}</span>
+                <div key={i} className="flex items-start space-x-3 bg-[#022c22]/50 p-3 rounded-xl border border-[#064e3b]/20">
+                  <CheckCircle className={`w-4 h-4 text-green-400 mt-0.5 shrink-0 ${dir === 'rtl' ? 'ml-3' : ''}`} />
+                  <span className="text-xs text-gray-300 font-medium">{h}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Object details */}
-          <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-6">
-            <h2 className="text-lg font-bold text-white mb-4">Objektdaten</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-2xl p-8">
+             <h2 className="text-lg font-bold text-white mb-6">Asset Specification</h2>
+             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {[
-                { icon: Ruler, label: "Wohnfläche", value: `${new Intl.NumberFormat("de-DE").format(property.livingArea)} m²` },
-                { icon: Layers, label: "Grundstück", value: `${new Intl.NumberFormat("de-DE").format(property.plotArea)} m²` },
-                { icon: Calendar, label: "Baujahr", value: property.yearBuilt.toString() },
-                { icon: Building2, label: "Etagen", value: property.floors.toString() },
-                { icon: Zap, label: "Energieeffizienz", value: property.energyRating },
-                { icon: ParkingCircle, label: "Stellplätze", value: property.parkingSpaces.toString() },
-                { icon: Users, label: "Vermietungsquote", value: `${property.occupancyRate}%` },
-                { icon: Wallet, label: "Monatsmiete", value: `${new Intl.NumberFormat("de-DE").format(property.monthlyRent)} €` },
-                { icon: TrendingUp, label: "Netto-Jahresertrag", value: `${new Intl.NumberFormat("de-DE").format(property.annualNetIncome)} €` },
+                { icon: Ruler, label: "Living Area", value: `${new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.livingArea)} m²` },
+                { icon: Layers, label: "Plot Area", value: `${new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.plotArea)} m²` },
+                { icon: Calendar, label: "Year Built", value: property.yearBuilt.toString() },
+                { icon: Building2, label: "Floors", value: property.floors.toString() },
+                { icon: Zap, label: "Energy Rating", value: property.energyRating },
+                { icon: ParkingCircle, label: "Parking", value: property.parkingSpaces.toString() },
+                { icon: Users, label: "Occupancy", value: `${property.occupancyRate}%` },
+                { icon: Wallet, label: "Monthly Rent", value: `${new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.monthlyRent)} €` },
+                { icon: TrendingUp, label: "Annual Net", value: `${new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.annualNetIncome)} €` },
               ].map((item, i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <div className="w-9 h-9 bg-[#022c22] rounded-lg flex items-center justify-center shrink-0">
-                    <item.icon className="w-4 h-4 text-[#c5a059]" />
+                <div key={i} className="flex items-center space-x-4">
+                  <div className={`w-10 h-10 bg-[#022c22] rounded-xl flex items-center justify-center shrink-0 border border-[#064e3b]/40 ${dir === 'rtl' ? 'ml-4' : ''}`}>
+                    <item.icon className="w-5 h-5 text-[#c5a059]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{item.label}</p>
-                    <p className="text-sm font-semibold text-white">{item.value}</p>
+                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">{item.label}</p>
+                    <p className="text-sm font-bold text-white">{item.value}</p>
                   </div>
                 </div>
               ))}
@@ -244,108 +262,37 @@ export default function PropertyDetailPage() {
           </div>
 
           {/* Sharia Structure */}
-          <div className="bg-[#03362a] border border-green-500/20 rounded-xl p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <ShieldCheck className="w-5 h-5 text-green-400" />
-              <h2 className="text-lg font-bold text-white">Sharia-Struktur</h2>
+          <div className="bg-[#03362a] border border-green-500/20 rounded-2xl p-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-6 opacity-5">
+               <ShieldCheck className="w-32 h-32 text-green-400" />
             </div>
-            <div className="bg-[#022c22] rounded-lg p-4 border-l-2 border-green-500/40">
-              <p className="text-sm text-gray-300 leading-relaxed italic font-serif">{property.shariaStructure}</p>
+            <div className="flex items-center space-x-2 mb-6">
+              <ShieldCheck className="w-6 h-6 text-green-400" />
+              <h2 className="text-lg font-bold text-white">Sharia Governance</h2>
             </div>
-            <div className="mt-4 flex items-center space-x-4 text-xs text-gray-500">
-              <span className="flex items-center space-x-1"><Scale className="w-3.5 h-3.5" /><span>AAOIFI Standards</span></span>
-              <span className="flex items-center space-x-1"><ShieldCheck className="w-3.5 h-3.5" /><span>Pre-Fatwa Level</span></span>
-              <span className="flex items-center space-x-1"><Lock className="w-3.5 h-3.5" /><span>eWpG §4 konform</span></span>
+            <div className="bg-[#022c22]/80 backdrop-blur-md rounded-2xl p-6 border-l-4 border-green-500/50 shadow-inner">
+              <p className="text-sm text-gray-200 leading-loose italic font-serif">{property.shariaStructure}</p>
             </div>
-          </div>
-
-          {/* Documents */}
-          <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-6">
-            <h2 className="text-lg font-bold text-white mb-4">Investmentdokumente</h2>
-            <div className="space-y-3">
-              {docsToShow.map((doc: any, i: number) => {
-                const DocIcon = docTypeIcons[doc.type as keyof typeof docTypeIcons];
-                return (
-                  <div key={i} className="flex items-center justify-between bg-[#022c22] rounded-lg p-4 hover:bg-[#022c22]/70 transition-colors group">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        doc.type === "sharia" ? "bg-green-500/10" : doc.type === "financial" ? "bg-[#c5a059]/10" : "bg-blue-500/10"
-                      }`}>
-                        <DocIcon className={`w-5 h-5 ${
-                          doc.type === "sharia" ? "text-green-400" : doc.type === "financial" ? "text-[#c5a059]" : "text-blue-400"
-                        }`} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-white">{doc.title}</p>
-                        <p className="text-xs text-gray-500">{doc.description}</p>
-                      </div>
-                    </div>
-                    <button className="text-gray-500 group-hover:text-[#c5a059] transition-colors">
-                      <Download className="w-4 h-4" />
-                    </button>
-                  </div>
-                );
-              })}
+            <div className="mt-6 flex flex-wrap items-center gap-6 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+              <span className="flex items-center space-x-2"><Scale className="w-4 h-4 text-green-500" /><span>AAOIFI Standards</span></span>
+              <span className="flex items-center space-x-2"><ShieldCheck className="w-4 h-4 text-green-500" /><span>Fatwa Certified</span></span>
+              <span className="flex items-center space-x-2"><Lock className="w-4 h-4 text-green-500" /><span>eWpG Non-Debt</span></span>
             </div>
-            {property.documents.length > 3 && (
-              <button
-                onClick={() => setShowAllDocs(!showAllDocs)}
-                className="mt-3 text-sm text-[#c5a059] hover:underline flex items-center space-x-1 mx-auto"
-              >
-                {showAllDocs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                <span>{showAllDocs ? "Weniger anzeigen" : `Alle ${property.documents.length} Dokumente anzeigen`}</span>
-              </button>
-            )}
-          </div>
-
-          {/* Blockchain & Security Proof */}
-          <div className="bg-[#03362a] border border-[#c5a059]/40 rounded-xl p-6 relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-48 h-48 bg-[#c5a059]/5 blur-[80px] rounded-full pointer-events-none" />
-             <div className="flex items-center space-x-2 mb-4 relative z-10">
-               <Database className="w-5 h-5 text-[#c5a059]" />
-               <h2 className="text-lg font-bold text-white">Blockchain-Transparenz (eWpG)</h2>
-             </div>
-             
-             <p className="text-sm text-gray-300 mb-6 relative z-10 leading-relaxed">
-               Ihr Investment ist zu 100% On-Chain verifizierbar und insolvenzsicher in der Zweckgesellschaft (SPV) verankert. Die BaFin-konformen Anleihebedingungen sind unveränderlich als Datei-Hash (IPFS) auf dem Smart Contract verewigt.
-             </p>
-             
-             <div className="space-y-4 relative z-10">
-                <div className="bg-[#022c22] rounded-lg p-4 border border-[#064e3b]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                   <div>
-                     <p className="text-xs text-green-400 font-semibold mb-1 uppercase tracking-wider">ERC-3643 Smart Contract Token</p>
-                     <p className="text-sm font-mono text-white">{property.tokenSymbol} (Polygon POS)</p>
-                   </div>
-                   <button className="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs font-medium transition-colors bg-[#03362a] px-3 py-2 rounded-md border border-[#064e3b]">
-                     <ExternalLink className="w-3.5 h-3.5" /> Auf Polygonscan prüfen
-                   </button>
-                </div>
-                
-                <div className="bg-[#022c22] rounded-lg p-4 border border-[#064e3b]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                   <div>
-                     <p className="text-xs text-[#c5a059] font-semibold mb-1 uppercase tracking-wider">IPFS Metadaten (Basisinformationsblatt)</p>
-                     <p className="text-sm font-mono text-white tracking-tight">QmXrEwG9p8Y...Zp2xL</p>
-                   </div>
-                   <button className="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs font-medium transition-colors bg-[#03362a] px-3 py-2 rounded-md border border-[#064e3b]">
-                     <ExternalLink className="w-3.5 h-3.5" /> Dokumenten-Hash laden
-                   </button>
-                </div>
-             </div>
           </div>
         </div>
 
-        {/* Right Column: Investment Card (sticky) */}
+        {/* Right Column: Investment Card */}
         <div className="lg:col-span-1">
-          <div className="bg-[#03362a] border border-[#c5a059]/30 rounded-xl p-6 lg:sticky lg:top-8">
-            <h3 className="text-lg font-bold text-white mb-1">Jetzt investieren</h3>
-            <p className="text-xs text-gray-500 mb-6">Tokenisierte Genussrechte nach eWpG</p>
+          <div className="bg-[#03362a] border border-[#c5a059]/40 rounded-2xl p-8 lg:sticky lg:top-8 shadow-2xl">
+            <h3 className="text-xl font-bold text-white mb-2">Participate</h3>
+            <p className="text-xs text-gray-500 mb-8 uppercase tracking-widest font-bold">Tokenized Genussrechte (eWpG)</p>
 
-            {/* Amount slider */}
-            <div className="mb-6">
-              <div className="flex justify-between items-end mb-3">
-                <label className="text-sm font-semibold text-gray-300">Betrag</label>
-                <span className="text-2xl font-bold text-[#d4af37]">
-                  {new Intl.NumberFormat("de-DE").format(investAmount)} €
+            {/* Amount picker */}
+            <div className="mb-8">
+              <div className="flex justify-between items-end mb-4">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Investment Amount</label>
+                <span className="text-3xl font-bold text-[#d4af37]">
+                  {new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(investAmount)} €
                 </span>
               </div>
               <input
@@ -355,79 +302,116 @@ export default function PropertyDetailPage() {
                 step={500}
                 value={investAmount}
                 onChange={(e) => setInvestAmount(Number(e.target.value))}
-                className="w-full"
+                className="w-full h-2 bg-[#022c22] rounded-lg appearance-none cursor-pointer accent-[#c5a059]"
               />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>{new Intl.NumberFormat("de-DE").format(property.minInvest)} €</span>
-                <span>{new Intl.NumberFormat("de-DE").format(property.maxInvest)} €</span>
+              <div className="flex justify-between text-[10px] text-gray-500 mt-2 font-bold uppercase">
+                <span>Min: {new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.minInvest)} €</span>
+                <span>Max: {new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(property.maxInvest)} €</span>
               </div>
             </div>
 
-            {/* Investment breakdown */}
-            <div className="bg-[#022c22] rounded-xl p-4 space-y-3 mb-6">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Token ({property.tokenSymbol})</span>
-                <span className="text-white font-medium">{tokensForAmount} Stück</span>
+            {/* Compound Mode Toggle (Task 063) */}
+            <div className="bg-[#022c22] rounded-2xl p-5 mb-8 border border-[#c5a059]/20 flex items-center justify-between group cursor-pointer hover:border-[#c5a059]/40 transition-all">
+               <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#c5a059]/10 flex items-center justify-center text-[#c5a059] group-hover:bg-[#c5a059]/20 transition-colors">
+                     <RefreshCcw className="w-5 h-5" />
+                  </div>
+                  <div>
+                     <p className="text-xs font-bold text-white mb-0.5">Compound Mode</p>
+                     <p className="text-[10px] text-gray-500 uppercase tracking-tight">Auto-Reinvest Ijarah Returns</p>
+                  </div>
+               </div>
+               <div className="w-10 h-5 bg-[#03362a] rounded-full p-1 border border-[#064e3b]">
+                  <div className="w-3 h-3 bg-gray-600 rounded-full" />
+               </div>
+            </div>
+
+            {/* Breakdown */}
+            <div className="space-y-4 mb-8">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-400 font-medium">Allocated Tokens</span>
+                <span className="text-white font-bold">{tokensForAmount} {property.tokenSymbol}</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Eigentumsanteil</span>
-                <span className="text-white font-medium">{ownershipPercent} %</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-400 font-medium">Ownership Share</span>
+                <span className="text-white font-bold">{ownershipPercent} %</span>
               </div>
-              <div className="border-t border-[#064e3b]/30 my-1" />
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Monatsertrag (Ijarah)</span>
-                <span className="text-green-400 font-medium">~{new Intl.NumberFormat("de-DE").format(monthlyReturn)} €</span>
+              <div className="h-px bg-[#064e3b]/30" />
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-400 font-medium">Monthly Ijarah (Est.)</span>
+                <span className="text-green-400 font-bold">+{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(monthlyReturn)} €</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Jahresertrag (Ijarah)</span>
-                <span className="text-green-400 font-medium">~{new Intl.NumberFormat("de-DE").format(annualReturn)} €</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Rendite p.a.</span>
-                <span className="text-[#d4af37] font-bold">{property.yield} %</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-gray-400 font-medium">Annual Ijarah (Est.)</span>
+                <span className="text-green-400 font-bold">+{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(annualReturn)} €</span>
               </div>
             </div>
 
-            {/* CTA */}
-            <button
-              onClick={handleInvest}
-              disabled={loading}
-              className="w-full bg-[#c5a059] hover:bg-[#b08d48] text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-[#c5a059]/20 flex items-center justify-center space-x-2 disabled:opacity-60"
-            >
-              {loading ? (
-                <svg className="animate-spin w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              ) : (
-                <>
-                  <TrendingUp className="w-5 h-5" />
-                  <span>Kauf bestätigen</span>
-                </>
-              )}
-            </button>
+            {/* CTAs */}
+            <div className="space-y-4">
+              <button
+                onClick={handleInvest}
+                disabled={loading}
+                className="w-full bg-[#c5a059] hover:bg-[#b08d48] text-[#022c22] font-black py-5 rounded-2xl transition-all shadow-xl shadow-[#c5a059]/20 flex items-center justify-center space-x-3 disabled:opacity-60 text-sm uppercase tracking-widest"
+              >
+                {loading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <>
+                    <TrendingUp className="w-5 h-5" />
+                    <span>Purchase Commit (Tx)</span>
+                  </>
+                )}
+              </button>
 
-            {/* Trust */}
-            <div className="mt-4 flex flex-col items-center space-y-2">
-              <div className="flex items-center space-x-1 text-xs text-gray-500">
-                <Lock className="w-3 h-3" />
-                <span>Verschlüsselt & DSGVO-konform</span>
-              </div>
-              <div className="flex items-center space-x-3 text-xs text-gray-500">
-                <span className="flex items-center space-x-1"><ShieldCheck className="w-3 h-3" /><span>eWpG</span></span>
-                <span className="flex items-center space-x-1"><Scale className="w-3 h-3" /><span>AAOIFI</span></span>
-                <span className="flex items-center space-x-1"><Info className="w-3 h-3" /><span>ECSP</span></span>
-              </div>
+              <button
+                onClick={async () => {
+                   setIsDownloading(true);
+                   try {
+                     const response = await fetch(`/api/properties/${property.id}/pitch-deck`);
+                     if (!response.ok) throw new Error('PDF generation failed');
+                     const blob = await response.blob();
+                     const url = window.URL.createObjectURL(blob);
+                     const a = document.createElement('a');
+                     a.href = url;
+                     a.download = `Amanah_Institutional_Expose_${property.name.replace(/\s+/g, '_')}.pdf`;
+                     document.body.appendChild(a);
+                     a.click();
+                     window.URL.revokeObjectURL(url);
+                     a.remove();
+                   } catch (err) {
+                     console.error("Downloader Error:", err);
+                   }
+                   setIsDownloading(false);
+                }}
+                disabled={isDownloading}
+                className="w-full bg-transparent border-2 border-[#064e3b] hover:border-[#c5a059] text-gray-400 hover:text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center space-x-3 disabled:opacity-60 text-sm uppercase tracking-widest"
+              >
+                {isDownloading ? (
+                   <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                   <>
+                     <Download className="w-5 h-5" />
+                     <span>Investment Exposé (PDF)</span>
+                   </>
+                )}
+              </button>
             </div>
+
+            {/* Compliance Footer */}
+            <p className="mt-8 text-[9px] text-gray-600 leading-normal text-center uppercase tracking-tighter">
+               Electronic securities pursuant to §4 Electronic Securities Act (eWpG). 
+               Brokerage as a tied agent of a licensed financial institution.
+            </p>
           </div>
         </div>
       </div>
 
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-green-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-start space-x-3 animate-fade-in-up max-w-md">
+        <div className={`fixed bottom-8 ${dir === 'rtl' ? 'left-8' : 'right-8'} z-50 bg-green-600 text-white px-8 py-5 rounded-2xl shadow-2xl flex items-start space-x-4 animate-fade-in-up max-w-lg border border-green-400/30`}>
           <CheckCircle className="w-6 h-6 shrink-0 mt-0.5" />
-          <span className="text-sm font-medium">{toast}</span>
+          <p className="text-sm font-bold tracking-tight">{toast}</p>
         </div>
       )}
     </div>

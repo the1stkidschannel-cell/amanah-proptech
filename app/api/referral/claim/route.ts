@@ -1,35 +1,30 @@
 import { NextResponse } from 'next/server';
+import { db } from '@/lib/firebase';
+import { doc, runTransaction, increment } from "firebase/firestore";
 
 export async function POST(request: Request) {
   try {
-    const { action, referralId, amount } = await request.json();
-
-    if (!action || !referralId) {
-      return NextResponse.json({ error: 'Missing parameters.' }, { status: 400 });
-    }
+    const { action, referralId, amount, userId } = await request.json();
+    if (!db || !action || !referralId || !userId) return NextResponse.json({ error: 'Missing config/params.' }, { status: 400 });
 
     if (action === 'claim_reward') {
-      // Simulate Database Check
-      // const refRecord = await db.collection("referrals").doc(referralId).get();
-      // if (refRecord.status !== "Investiert") throw Error;
-      
-      // Simulate adding funds to user's wallet via ACID transaction
-      // await db.collection("wallets").doc(userId).update({
-      //    fiatBalance: increment(amount)
-      // });
+      const referralRef = doc(db, "referrals", referralId);
+      const walletRef = doc(db, "wallets", userId);
 
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate networking delay
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Reward successfully claimed and deposited into wallet.',
-        amountCredited: amount,
-        txId: `REF_REWARD_${Date.now()}`
+      const result = await runTransaction(db, async (transaction) => {
+        const refDoc = await transaction.get(referralRef);
+        if (!refDoc.exists() || refDoc.data().status !== "Investiert" || refDoc.data().claimed) {
+          throw new Error("Invalid or already claimed referral.");
+        }
+        transaction.update(referralRef, { claimed: true, claimedAt: new Date().toISOString() });
+        transaction.update(walletRef, { fiatBalance: increment(amount || 250) });
+        return { success: true, amount: amount || 250 };
       });
-    }
 
+      return NextResponse.json({ ...result, txId: `REF_REWARD_${Date.now()}` });
+    }
     return NextResponse.json({ error: 'Unknown action.' }, { status: 400 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Internal Error' }, { status: 500 });
   }
 }

@@ -48,9 +48,47 @@ export interface PropertyDetail {
   coordinates: { lat: number; lng: number };
   gallery: string[];
   status: "funding" | "funded" | "closed";
+  isInstitutional?: boolean;
 }
 
 export const properties: PropertyDetail[] = [
+  {
+    id: "P4",
+    name: "Amanah Residence Berlin (Institutional)",
+    location: "Berlin, Deutschland",
+    city: "Berlin",
+    bundesland: "Berlin",
+    targetVolume: 45000000,
+    minInvest: 100000,
+    maxInvest: 5000000,
+    yield: 4.8,
+    funded: 25,
+    units: 120,
+    type: "Wohnanlage",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=800",
+    description: "Premium Wohnanlage im Herzen Berlins mit institutionellem Fokus und stabiler Ijarah-Rendite.",
+    highlights: ["120 Einheiten", "Institutional-Only Ticket size", "BaFin-konform", "AAOIFI Sharia Audit"],
+    livingArea: 8500,
+    plotArea: 4200,
+    yearBuilt: 2023,
+    floors: 7,
+    energyRating: "A",
+    parkingSpaces: 60,
+    occupancyRate: 98,
+    monthlyRent: 185000,
+    annualNetIncome: 2220000,
+    shariaStructure: "Diminishing Musharakah",
+    tokenSymbol: "ARB",
+    tokenPrice: 1000,
+    totalTokens: 45000,
+    holdingPeriod: "10 Jahre",
+    exitStrategy: "Institutional Exit",
+    documents: [],
+    coordinates: { lat: 52.52, lng: 13.405 },
+    gallery: [],
+    status: "funding",
+    isInstitutional: true,
+  },
   {
     id: "rhein-ruhr",
     name: "Wohnquartier Rhein-Ruhr",

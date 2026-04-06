@@ -38,21 +38,24 @@ export async function POST(request: Request) {
         
         log.push(`-> Berechne für ${user.name}: Investiert: ${user.amount}€. Ausschüttung: +${dividend}€`);
         
-        // In production: Create Transaction document in Firestore
-        /*
-          await addDoc(collection(db, "transactions"), {
-            userId: user.id,
-            propertyId: prop.id,
-            type: "yield",
-            amount: dividend,
-            date: Timestamp.now(),
-            status: "executed"
-          });
-          
-          await updateDoc(doc(db, "wallets", user.id), {
-            balance: increment(dividend)
-          });
-        */
+        // ── AUTO RE-INVESTMENT LOGIC (Task 063) ──
+        // Simulate a user preference for "Compound Mode"
+        const autoReinvest = user.id === "USR_2"; // In production: user.settings.autoReinvest
+
+        if (autoReinvest && dividend >= 10) { // Min reinvest limit
+          try {
+            log.push(`   [AUTO-REINVEST] Triggering Compound Mode for ${user.id}...`);
+            // In production: await executeInvestmentACID(user.id, prop.id, dividend);
+            log.push(`   [SUCCESS] ${dividend}€ re-invested into ${prop.tokenSymbol}. (Task 063)`);
+          } catch (e: any) {
+            log.push(`   [ERROR] Re-investment failed: ${e.message}`);
+          }
+        } else {
+          // Normal credit path
+          // await updateUserWallet(user.id, dividend);
+          log.push(`   [WALLET] ${dividend}€ credited to investor balance.`);
+        }
+        
         totalGeneratedTransactions++;
       }
     }

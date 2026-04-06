@@ -73,22 +73,15 @@ export default function DashboardPage() {
           <div className="bg-[#c5a059]/20 p-2 rounded-lg">
             <FileText className="w-5 h-5 text-[#c5a059]" />
           </div>
-          <h2 className="text-xl font-bold text-white uppercase tracking-widest break-all">Executive Summary</h2>
-          <span className="text-xs font-bold bg-[#c5a059]/20 text-[#c5a059] px-2 py-0.5 rounded ml-2">EN</span>
+          <h2 className="text-xl font-bold text-white uppercase tracking-widest">Executive Summary</h2>
         </div>
-        <div className="space-y-4">
-          <p className="text-gray-300 leading-relaxed text-sm lg:text-base font-medium">
-            <strong className="text-white">Amanah PropTech</strong> is the first BaFin-regulated ecosystem bridging institutional Islamic Finance with the European asset tokenization act (eWpG). We provide Family Offices, SWFs, and retail investors with highly liquid, Riba-free access to German Core Real Estate.
-          </p>
-          <p className="text-gray-400 leading-relaxed text-sm">
-            By leveraging strict <strong className="text-gray-300">Diminishing Musharakah (Mietkauf)</strong> and <strong className="text-gray-300">Ijarah (Leasing)</strong> structures on the Polygon blockchain, we eliminate up to 80% of traditional SPV setup costs and bureaucratic friction. Instead of freezing capital in illiquid brick-and-mortar assets, our investors enjoy monthly, Sharia-certified rental payouts (4-6% target p.a.) and the ability to exit their positions instantly via our proprietary P2P Secondary Market Matching Engine.
-          </p>
-          <div className="pt-4 flex flex-wrap gap-3">
-             <span className="px-3 py-1 bg-[#064e3b]/50 border border-[#064e3b] text-gray-300 text-xs rounded-full">€ 100M+ Target AUM</span>
-             <span className="px-3 py-1 bg-[#064e3b]/50 border border-[#064e3b] text-gray-300 text-xs rounded-full">BaFin (eWpG) Compliant</span>
-             <span className="px-3 py-1 bg-[#064e3b]/50 border border-[#064e3b] text-gray-300 text-xs rounded-full">AAOIFI Screened</span>
-             <span className="px-3 py-1 bg-[#064e3b]/50 border border-[#064e3b] text-gray-300 text-xs rounded-full">Instant Settlement (Smart Contracts)</span>
-          </div>
+        <p className="text-lg text-gray-300 mb-6 max-w-2xl leading-relaxed">
+          The first BaFin-regulated platform bridging MENA capital and European core real estate via eWpG tokenization. 100% Sharia-compliant.
+        </p>
+        <div className="flex flex-wrap gap-3">
+           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">€ 500M Target AUM</span>
+           <span className="px-3 py-1 bg-green-500/10 border border-green-500/30 text-green-400 text-[10px] font-bold rounded-full uppercase">BaFin (eWpG)</span>
+           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">AAOIFI Screened</span>
         </div>
       </div>
 
