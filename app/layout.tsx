@@ -19,19 +19,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Amanah PropTech | BaFin-Regulated Halal Real Estate",
-  description: "The leading institutional-grade platform for tokenized Sharia-compliant real estate in Germany (eWpG). AAOIFI-screened. BaFin-regulated.",
+  title: "Amanah PropTech | Halal Real Estate Tokenization (MVP)",
+  description: "A technological proof-of-concept for tokenized Sharia-compliant real estate in Germany (eWpG). No BaFin license held. All data is simulated.",
   openGraph: {
-    title: "Amanah PropTech | Institutional Halal Investing",
-    description: "Access high-yield German real estate via regulated tokenization. 100% Sharia-compliant.",
+    title: "Amanah PropTech | Halal Real Estate MVP",
+    description: "Technological MVP for German real estate tokenization. Planned Sharia-compliance. No financial services provided.",
     images: ["/og-image.jpg"],
     url: "https://amanah-proptech.com",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Amanah PropTech | Halal PropTech Leader",
-    description: "Scaling Sharia-compliant real estate to 500M+ volume.",
+    title: "Amanah PropTech | Halal PropTech MVP",
+    description: "Building Sharia-compliant real estate tokenization technology.",
   }
 };
 

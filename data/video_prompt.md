@@ -14,7 +14,7 @@
 > 
 > **Scene 3**: A hand-held look at a sleek, premium smartphone showing the Amanah Dashboard. The golden tokens flow right into the wallet balance. 
 > 
-> **Visual Style**: Use a color palette of deep emerald green (#03362a) and rich metallic gold (#c5a059). Lighting is soft-bokeh, high-contrast, and luxury. Elegant serif typography overlays: 'RIBA-FREE', 'BAFIN REGULATED', 'SACHWERTGESICHERT'. 
+> **Visual Style**: Use a color palette of deep emerald green (#03362a) and rich metallic gold (#c5a059). Lighting is soft-bokeh, high-contrast, and luxury. Elegant serif typography overlays: 'RIBA-FREE', 'eWpG TOKENIZED', 'SACHWERTGESICHERT'. 
 > 
 > **Motion**: Slow-motion, smooth transitions, mimicking a high-end investment bank advertisement. No stock footage; 100% original 3D-feeling generation. Zero-zins, Halal, institutional excellence."
 

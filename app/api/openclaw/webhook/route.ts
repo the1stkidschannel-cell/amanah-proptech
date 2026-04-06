@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     // Route Open Claw Commands
     if (text === '/status') {
        // Return AUM and compliance status
-       replyText = "Amanah PropTech System Status:\n- Compliance: eWpG & BaFin OK\n- Engine: Turbo Mode ACTIVE\n- Goal: $500M AUM";
+       replyText = "Amanah PropTech System Status:\n- Compliance: eWpG & BaFin Tied-Agent (PLANNED)\n- Engine: Turbo Mode ACTIVE\n- Goal: $500M AUM\n- Status: MVP Phase";
     } else if (text === '/audit') {
        // Trigger the Deal Source Auditor
        replyText = "Initiating Deal Source Auditor...";

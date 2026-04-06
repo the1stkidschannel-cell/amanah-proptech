@@ -76,12 +76,12 @@ export default function DashboardPage() {
           <h2 className="text-xl font-bold text-white uppercase tracking-widest">Executive Summary</h2>
         </div>
         <p className="text-lg text-gray-300 mb-6 max-w-2xl leading-relaxed">
-          The first BaFin-regulated platform bridging MENA capital and European core real estate via eWpG tokenization. 100% Sharia-compliant.
+          Eine im Aufbau befindliche Plattform zur Verbindung von MENA-Kapital mit europäischen Core-Immobilien via eWpG-Tokenisierung. Geplante Sharia-Zertifizierung.
         </p>
         <div className="flex flex-wrap gap-3">
            <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">€ 500M Target AUM</span>
-           <span className="px-3 py-1 bg-green-500/10 border border-green-500/30 text-green-400 text-[10px] font-bold rounded-full uppercase">BaFin (eWpG)</span>
-           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">AAOIFI Screened</span>
+           <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-bold rounded-full uppercase">eWpG (geplant)</span>
+           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">AAOIFI (Ziel)</span>
         </div>
       </div>
 

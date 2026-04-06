@@ -86,7 +86,7 @@ export default function WaitlistModal({ isOpen, onClose }: WaitlistModalProps) {
                       Sichern Sie sich Early-Bird Zugang
                     </h2>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Werden Sie Teil der ersten BaFin-regulierten Plattform für tokenisierte Halal-Immobilien.
+                      Werden Sie Teil unserer technologischen Plattform für geplante tokenisierte Halal-Immobilien (MVP).
                     </p>
                   </div>
 

@@ -3,222 +3,206 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-// ─── English Institutional Landing Page ────────────────────────────────────
-// Mirrors the German institutional page but in English for MENA/international investors.
+// ─── Institutional Design Tokens ──────────────────────────────────────────
+const colors = {
+  bg: '#050f0a',
+  surface: 'rgba(255, 255, 255, 0.03)',
+  border: 'rgba(197, 160, 89, 0.15)',
+  gold: '#c5a059',
+  goldGradient: 'linear-gradient(135deg, #c5a059 0%, #e8c97a 100%)',
+  emerald: '#064e3b',
+  textMain: '#f0ede8',
+  textDim: '#a0998e',
+};
 
+const glassEffect = {
+  background: 'rgba(10, 25, 20, 0.7)',
+  backdropFilter: 'blur(20px)',
+  border: `1px solid ${colors.border}`,
+  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+};
+
+// ─── Data ──────────────────────────────────────────────────────────────────
 const metrics = [
-  { value: '€500M+', label: 'Target AUM by 2027' },
+  { value: '€2.5B+', label: 'Target AUM (3-Year)' },
   { value: '4.8–6.2%', label: 'Target Net Ijarah Yield p.a.' },
-  { value: '€500K', label: 'Minimum Allocation per SPV' },
-  { value: '100%', label: 'BaFin / eWpG Regulated' },
+  { value: 'Tier-1', label: 'Planned Property Mgmt Partners' },
+  { value: 'Target', label: 'BaFin Tied-Agent Structure' },
 ];
 
 const features = [
   {
     icon: '🕌',
-    title: 'Sharia-Compliant Structure',
-    desc: 'Every token is certified by an independent Scholars Board. Ijarah-based income distribution — zero interest, zero gharar.',
+    title: 'Certified Sharia-Compliance',
+    desc: 'Each asset undergoes rigorous certification by our independent Sharia Board. Ijarah-based distribution ensures zero-interest, ethical returns.',
   },
   {
     icon: '🏛️',
-    title: 'BaFin-Regulated & eWpG-Compliant',
-    desc: 'German electronic securities law (eWpG) provides the legal backbone. Blockchain-native, fully regulated digital securities.',
+    title: 'Planned Institutional Bridge',
+    desc: 'Targeting the German Electronic Securities Act (eWpG) for blockchain-native, transparent digital securities. BaFin Tied-Agent structure in preparation.',
   },
   {
-    icon: '🏙️',
-    title: 'Prime German Core Real Estate',
-    desc: 'Institutional-grade office, residential and logistics assets in Class-A DACH markets: Munich, Frankfurt, Berlin, Hamburg.',
+    icon: '🏢',
+    title: 'Tier-1 Asset Management (Planned)',
+    desc: 'Assets are planned to be managed by global Tier-1 partners (e.g. CBRE, JLL) via API integration, accessible through our planned €4,990/month White-Label SaaS Portal.',
   },
   {
-    icon: '🔒',
-    title: 'White-Label Due Diligence Room',
-    desc: 'Full transparency via a dedicated data room. Institutional co-investors receive NAV reports, rent rolls and legal opinions.',
-  },
-  {
-    icon: '⚡',
-    title: 'Dedicated SPV per Asset',
-    desc: 'Each property is ring-fenced in its own Special Purpose Vehicle — full asset separation, no cross-collateralization.',
-  },
-  {
-    icon: '🌍',
-    title: 'MENA-First Investment Bridge',
-    desc: 'Designed for GCC sovereign funds, family offices and Islamic banks seeking stable Euro-denominated real estate allocations.',
+    icon: '🔐',
+    title: 'Automated Compliance Stack',
+    desc: 'KYC/AML checks (IDnow/Sumsub) and Sharia-compliance reporting are fully automated by AI agents within our tokenization engine.',
   },
 ];
 
 const pipeline = [
-  { status: 'Active', name: 'Berlin Mitte Office Complex', aum: '€28M', yield: '5.4%', type: 'Office' },
-  { status: 'Active', name: 'Munich Logistics Hub', aum: '€45M', yield: '4.9%', type: 'Logistics' },
-  { status: 'Pipeline', name: 'Frankfurt Banking District', aum: '€72M', yield: '5.8%', type: 'Office' },
-  { status: 'Pipeline', name: 'Hamburg Residential Portfolio', aum: '€38M', yield: '4.6%', type: 'Residential' },
+  { status: 'Simulated', name: 'Berlin Green-Office Cluster', aum: '€32M', yield: '5.2%', type: 'Core Office (Illustrative)' },
+  { status: 'Simulated', name: 'Munich Airport Logistics', aum: '€18M', yield: '5.8%', type: 'Logistics (Illustrative)' },
+  { status: 'Simulated', name: 'Frankfurt Sky-Residential', aum: '€85M', yield: '4.9%', type: 'Residential (Illustrative)' },
 ];
 
 export default function InstitutionalEnglishPage() {
   const [formData, setFormData] = useState({ name: '', company: '', email: '', aum: '' });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In production: POST to CRM API
     setSubmitted(true);
   };
 
   return (
-    <main style={{ fontFamily: "'Inter', 'Segoe UI', sans-serif", background: '#050f0a', minHeight: '100vh', color: '#f0ede8' }}>
+    <main style={{ background: colors.bg, color: colors.textMain, fontFamily: "'Inter', sans-serif", minHeight: '100vh', overflowX: 'hidden' }}>
+      
+      {/* ── Background Ambiance ── */}
+      <div style={{ position: 'fixed', top: '-10%', left: '-10%', width: '40%', height: '40%', background: 'radial-gradient(circle, rgba(197, 160, 89, 0.05) 0%, transparent 70%)', zIndex: 0, pointerEvents: 'none' }} />
+      <div style={{ position: 'fixed', bottom: '-10%', right: '-10%', width: '50%', height: '50%', background: 'radial-gradient(circle, rgba(6, 78, 59, 0.08) 0%, transparent 70%)', zIndex: 0, pointerEvents: 'none' }} />
 
       {/* ── Navigation ── */}
-      <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 48px', borderBottom: '1px solid rgba(197,160,89,0.15)', background: 'rgba(5,15,10,0.9)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 100 }}>
+      <nav style={{ ...glassEffect, position: 'sticky', top: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 60px', zIndex: 1000, borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '22px', fontWeight: 800, color: '#c5a059' }}>أمانة</span>
-          <span style={{ fontSize: '16px', fontWeight: 600, color: '#f0ede8' }}>Amanah PropTech</span>
+          <span style={{ fontSize: '26px', fontWeight: 900, color: colors.gold, letterSpacing: '-1px' }}>AMANAH</span>
+          <div style={{ height: '24px', width: '1px', background: colors.border }} />
+          <span style={{ fontSize: '14px', fontWeight: 500, letterSpacing: '2px', color: colors.textDim }}>INSTITUTIONAL</span>
         </div>
-        <div style={{ display: 'flex', gap: '32px', fontSize: '14px', color: '#a0998e' }}>
-          <a href="#features" style={{ color: 'inherit', textDecoration: 'none' }}>Features</a>
-          <a href="#pipeline" style={{ color: 'inherit', textDecoration: 'none' }}>Pipeline</a>
-          <a href="#contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact IR</a>
-          <Link href="/institutional" style={{ color: '#c5a059', textDecoration: 'none', fontWeight: 600 }}>🇩🇪 Deutsch</Link>
+        <div style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
+          {['Ecosystem', 'Pipeline', 'Risk Mgmt'].map((item) => (
+            <a key={item} href={`#${item.toLowerCase()}`} style={{ color: colors.textDim, textDecoration: 'none', fontSize: '13px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>{item}</a>
+          ))}
+          <Link href="/institutional" style={{ padding: '8px 16px', borderRadius: '8px', border: `1px solid ${colors.gold}`, color: colors.gold, textDecoration: 'none', fontSize: '12px', fontWeight: 700 }}>🇩🇪 DEUTSCH</Link>
+          <a href="#contact" style={{ background: colors.goldGradient, color: colors.bg, padding: '10px 24px', borderRadius: '8px', textDecoration: 'none', fontWeight: 800, fontSize: '13px' }}>GO LIVE</a>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section style={{ padding: '120px 48px 80px', maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
-        <div style={{ display: 'inline-block', background: 'rgba(197,160,89,0.12)', border: '1px solid rgba(197,160,89,0.3)', borderRadius: '100px', padding: '8px 20px', fontSize: '13px', color: '#c5a059', marginBottom: '32px', fontWeight: 600 }}>
-          🏦 For Qualified Institutional Investors Only
+      {/* ── Hero Segment ── */}
+      <section style={{ position: 'relative', padding: '140px 60px 100px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', zIndex: 1 }}>
+        <div style={{ background: '#022c22', border: `1px solid ${colors.emerald}`, color: '#10b981', padding: '6px 18px', borderRadius: '100px', fontSize: '11px', fontWeight: 900, letterSpacing: '2px', marginBottom: '16px', textTransform: 'uppercase' }}>
+          • INSTITUTIONAL PRIVATE BETA (GTM PHASE)
         </div>
-        <h1 style={{ fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 900, lineHeight: 1.1, marginBottom: '24px', color: '#f0ede8' }}>
-          Islamic Real Estate<br />
-          <span style={{ background: 'linear-gradient(135deg, #c5a059, #e8c97a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Tokenized. BaFin-Regulated.
+        <div style={{ background: 'rgba(197, 160, 89, 0.1)', border: `1px solid ${colors.gold}`, color: colors.gold, padding: '6px 18px', borderRadius: '100px', fontSize: '12px', fontWeight: 800, letterSpacing: '1.5px', marginBottom: '40px', textTransform: 'uppercase' }}>
+          MVP PROTOTYPE · Planned Sharia Certification · Targeting BaFin Tied-Agent Structure
+        </div>
+        <h1 style={{ fontSize: '72px', fontWeight: 900, lineHeight: 1.05, marginBottom: '24px', maxWidth: '1000px' }}>
+          Bridging Global Islamic Capital to <br/>
+          <span style={{ background: colors.goldGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            European Core Real Estate.
           </span>
         </h1>
-        <p style={{ fontSize: '18px', lineHeight: 1.7, color: '#a0998e', maxWidth: '680px', margin: '0 auto 48px' }}>
-          The first fully regulated bridge for GCC sovereign funds, Islamic banks and MENA family offices to access 
-          prime German core real estate — structured under eWpG and certified Sharia-compliant.
+        <p style={{ fontSize: '20px', color: colors.textDim, maxWidth: '720px', lineHeight: 1.6, marginBottom: '50px' }}>
+          Direct access to prime DACH-region assets via tokenized eWpG structures. 
+          Engineered for Sovereign Funds, Family Offices, and Islamic Institutions.
         </p>
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="#contact" style={{ display: 'inline-block', background: 'linear-gradient(135deg, #c5a059, #b08d48)', color: '#050f0a', padding: '16px 40px', borderRadius: '10px', textDecoration: 'none', fontWeight: 700, fontSize: '16px' }}>
-            Request Institutional Deck
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <a href="#contact" style={{ background: colors.goldGradient, color: colors.bg, padding: '18px 48px', borderRadius: '12px', textDecoration: 'none', fontWeight: 900, fontSize: '18px', boxShadow: `0 10px 40px -10px ${colors.gold}66` }}>
+            Request Access
           </a>
-          <a href="#pipeline" style={{ display: 'inline-block', border: '1px solid rgba(197,160,89,0.4)', color: '#c5a059', padding: '16px 40px', borderRadius: '10px', textDecoration: 'none', fontWeight: 600, fontSize: '16px' }}>
-            View Live Pipeline →
+          <a href="#pipeline" style={{ ...glassEffect, padding: '18px 48px', borderRadius: '12px', textDecoration: 'none', fontWeight: 700, fontSize: '18px' }}>
+            View Dashboard →
           </a>
         </div>
       </section>
 
-      {/* ── Metrics ── */}
-      <section style={{ padding: '60px 48px', background: 'rgba(197,160,89,0.05)', borderTop: '1px solid rgba(197,160,89,0.1)', borderBottom: '1px solid rgba(197,160,89,0.1)' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
-          {metrics.map((m) => (
-            <div key={m.label} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: 900, color: '#c5a059', marginBottom: '8px' }}>{m.value}</div>
-              <div style={{ fontSize: '14px', color: '#706860', fontWeight: 500 }}>{m.label}</div>
-            </div>
-          ))}
-        </div>
+      {/* ── Metric Ribbon ── */}
+      <section style={{ ...glassEffect, margin: '0 60px', padding: '50px', borderRadius: '24px', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '40px', textAlign: 'center' }}>
+        {metrics.map((m) => (
+          <div key={m.label}>
+            <div style={{ fontSize: '42px', fontWeight: 900, color: colors.gold, marginBottom: '8px' }}>{m.value}</div>
+            <div style={{ fontSize: '13px', color: colors.textDim, textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>{m.label}</div>
+          </div>
+        ))}
       </section>
 
       {/* ── Features ── */}
-      <section id="features" style={{ padding: '100px 48px', maxWidth: '1100px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '36px', fontWeight: 800, textAlign: 'center', marginBottom: '60px', color: '#f0ede8' }}>
-          Why Institutional Investors Choose Amanah
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '28px' }}>
+      <section id="ecosystem" style={{ padding: '140px 60px', maxWidth: '1300px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '80px' }}>
+          <div style={{ maxWidth: '600px' }}>
+            <h2 style={{ fontSize: '48px', fontWeight: 800, marginBottom: '24px' }}>The Institutional Gold Standard.</h2>
+            <p style={{ color: colors.textDim, fontSize: '18px' }}>We combine the reliability of German legal framework with the efficiency of blockchain technology.</p>
+          </div>
+          <a href="/academy" style={{ color: colors.gold, fontWeight: 700, textDecoration: 'none', borderBottom: `2px solid ${colors.gold}`, paddingBottom: '4px' }}>Learn more about our Protocol →</a>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '30px' }}>
           {features.map((f) => (
-            <div key={f.title} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(197,160,89,0.12)', borderRadius: '16px', padding: '32px', transition: 'border-color 0.2s' }}>
-              <div style={{ fontSize: '36px', marginBottom: '16px' }}>{f.icon}</div>
-              <h3 style={{ fontSize: '17px', fontWeight: 700, color: '#f0ede8', marginBottom: '12px' }}>{f.title}</h3>
-              <p style={{ fontSize: '14px', color: '#706860', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
+            <div key={f.title} style={{ ...glassEffect, padding: '48px', borderRadius: '24px', transition: 'transform 0.3s' }}>
+              <div style={{ fontSize: '48px', marginBottom: '24px' }}>{f.icon}</div>
+              <h3 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '16px', color: colors.gold }}>{f.title}</h3>
+              <p style={{ color: colors.textDim, lineHeight: 1.8, fontSize: '16px' }}>{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── Pipeline ── */}
-      <section id="pipeline" style={{ padding: '80px 48px', background: 'rgba(197,160,89,0.04)', borderTop: '1px solid rgba(197,160,89,0.08)' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <h2 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '12px', color: '#f0ede8' }}>Live Investment Pipeline</h2>
-          <p style={{ color: '#706860', marginBottom: '40px', fontSize: '15px' }}>Institutional DD room available upon NDA execution.</p>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-              <thead>
-                <tr style={{ borderBottom: '2px solid rgba(197,160,89,0.3)' }}>
-                  {['Status', 'Asset', 'AUM', 'Net Yield', 'Type'].map((h) => (
-                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', color: '#c5a059', fontWeight: 600 }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {pipeline.map((p, i) => (
-                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <td style={{ padding: '14px 16px' }}>
-                      <span style={{ background: p.status === 'Active' ? 'rgba(34,197,94,0.15)' : 'rgba(197,160,89,0.15)', color: p.status === 'Active' ? '#22c55e' : '#c5a059', borderRadius: '6px', padding: '3px 10px', fontSize: '12px', fontWeight: 600 }}>
-                        {p.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '14px 16px', color: '#f0ede8', fontWeight: 500 }}>{p.name}</td>
-                    <td style={{ padding: '14px 16px', color: '#c5a059', fontWeight: 700 }}>{p.aum}</td>
-                    <td style={{ padding: '14px 16px', color: '#22c55e', fontWeight: 600 }}>{p.yield}</td>
-                    <td style={{ padding: '14px 16px', color: '#706860' }}>{p.type}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* ── Pipeline Section ── */}
+      <section id="pipeline" style={{ padding: '100px 60px', background: 'rgba(6, 78, 59, 0.05)', borderTop: `1px solid ${colors.border}`, borderBottom: `1px solid ${colors.border}` }}>
+        <div style={{ maxWidth: '1300px', margin: '0 auto' }}>
+          <h2 style={{ fontSize: '42px', fontWeight: 800, marginBottom: '50px' }}>Active Allocation Queue</h2>
+          <div style={{ display: 'grid', gap: '20px' }}>
+            {pipeline.map((p, i) => (
+              <div key={i} style={{ ...glassEffect, display: 'grid', gridTemplateColumns: '120px 2fr 1fr 1fr 1fr', alignItems: 'center', padding: '30px 40px', borderRadius: '16px' }}>
+                <span style={{ background: p.status === 'Simulated' ? colors.gold : colors.gold, color: colors.bg, padding: '4px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', width: 'fit-content' }}>{p.status}</span>
+                <span style={{ fontSize: '20px', fontWeight: 700 }}>{p.name}</span>
+                <span style={{ color: colors.gold, fontWeight: 800, fontSize: '22px' }}>{p.aum} AUM</span>
+                <span style={{ color: '#10b981', fontWeight: 700 }}>{p.yield} Yield</span>
+                <span style={{ opacity: 0.6, fontSize: '14px', textAlign: 'right' }}>{p.type}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Contact / IR Form ── */}
-      <section id="contact" style={{ padding: '100px 48px', maxWidth: '640px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '32px', fontWeight: 800, textAlign: 'center', marginBottom: '12px', color: '#f0ede8' }}>
-          Request Investor Pack
-        </h2>
-        <p style={{ textAlign: 'center', color: '#706860', marginBottom: '48px', fontSize: '15px' }}>
-          Qualified institutions receive the full prospectus, Sharia certification, and SPV term sheets within 24h.
-        </p>
-        {submitted ? (
-          <div style={{ textAlign: 'center', padding: '60px 40px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: '16px' }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
-            <h3 style={{ color: '#22c55e', marginBottom: '8px' }}>Request Received</h3>
-            <p style={{ color: '#706860' }}>Our IR team will contact you within 24 hours.</p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {[
-              { id: 'name', placeholder: 'Full Name', type: 'text' },
-              { id: 'company', placeholder: 'Institution / Fund Name', type: 'text' },
-              { id: 'email', placeholder: 'Institutional Email Address', type: 'email' },
-              { id: 'aum', placeholder: 'Investable AUM (€M)', type: 'text' },
-            ].map((field) => (
-              <input
-                key={field.id}
-                type={field.type}
-                placeholder={field.placeholder}
-                required={field.id !== 'aum'}
-                value={(formData as any)[field.id]}
-                onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(197,160,89,0.2)', borderRadius: '10px', padding: '16px 20px', color: '#f0ede8', fontSize: '15px', outline: 'none' }}
-              />
-            ))}
-            <button type="submit" style={{ background: 'linear-gradient(135deg, #c5a059, #b08d48)', color: '#050f0a', padding: '18px', borderRadius: '10px', border: 'none', fontWeight: 700, fontSize: '16px', cursor: 'pointer' }}>
-              Request Institutional Deck →
-            </button>
-            <p style={{ textAlign: 'center', fontSize: '12px', color: '#50483e' }}>
-              For qualified investors only. This is not a public offer. Data handled per GDPR.
-            </p>
-          </form>
-        )}
+      {/* ── Contact Form ── */}
+      <section id="contact" style={{ padding: '140px 60px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div style={{ maxWidth: '700px', width: '100%', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '56px', fontWeight: 900, marginBottom: '20px' }}>Secure Your Allocation.</h2>
+          <p style={{ color: colors.textDim, marginBottom: '60px', fontSize: '18px' }}>Request the full institutional prospectus and access our private Deal-Room.</p>
+          
+          {submitted ? (
+            <div style={{ ...glassEffect, padding: '80px', borderRadius: '32px', borderColor: '#10b981' }}>
+              <div style={{ fontSize: '64px', marginBottom: '24px' }}>🛡️</div>
+              <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#10b981' }}>Inquiry Transmitted</h3>
+              <p style={{ color: colors.textDim, marginTop: '16px' }}>Your dedicated IR manager will contact you within 4 business hours.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <input type="text" placeholder="Full Name" required style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${colors.border}`, padding: '20px', borderRadius: '12px', color: 'white', outline: 'none' }} />
+                <input type="email" placeholder="Institutional Email" required style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${colors.border}`, padding: '20px', borderRadius: '12px', color: 'white', outline: 'none' }} />
+              </div>
+              <input type="text" placeholder="Managing Entity / Institution" required style={{ background: 'rgba(255,255,255,0.05)', border: `1px solid ${colors.border}`, padding: '20px', borderRadius: '12px', color: 'white', outline: 'none' }} />
+              <button type="submit" style={{ background: colors.goldGradient, color: colors.bg, padding: '24px', borderRadius: '12px', fontWeight: 900, fontSize: '20px', cursor: 'pointer', border: 'none', transition: 'transform 0.2s' }}>
+                REQUEST MASTER DECK
+              </button>
+              <p style={{ fontSize: '12px', color: '#555', marginTop: '10px' }}>This is a technological MVP demonstration. No financial services are provided. No BaFin license is held. All data is simulated.</p>
+            </form>
+          )}
+        </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: '1px solid rgba(197,160,89,0.1)', padding: '40px 48px', textAlign: 'center', color: '#50483e', fontSize: '13px' }}>
-        <p style={{ marginBottom: '8px' }}>
-          <strong style={{ color: '#c5a059' }}>Amanah PropTech</strong> · Institutional Relations · deals@amanah-proptech.com
+      <footer style={{ padding: '80px 60px', borderTop: `1px solid ${colors.border}`, textAlign: 'center' }}>
+        <p style={{ fontSize: '14px', color: colors.textDim }}>
+          <strong style={{ color: colors.gold }}>Amanah PropTech</strong> · Technological MVP — no regulated financial services are provided.<br/>
+          Institutional Relations: amanah.proptech@gmail.com
         </p>
-        <p>© 2026 Amanah PropTech. Technology provider & tied agent (Tied Agent) per § 2 Para. 10 KWG. All investments are mediated under the liability of our licensed white-label partner.</p>
-        <div style={{ marginTop: '16px', display: 'flex', justifyContent: 'center', gap: '24px' }}>
-          <Link href="/institutional" style={{ color: '#706860', textDecoration: 'none' }}>🇩🇪 German Version</Link>
-          <Link href="/compliance" style={{ color: '#706860', textDecoration: 'none' }}>Compliance</Link>
-          <Link href="/institutional/dashboard" style={{ color: '#706860', textDecoration: 'none' }}>Investor Login</Link>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginTop: '30px', fontSize: '12px' }}>
+          {['Compliance', 'Risk Disclosure', 'Privacy Policy'].map(item => <a key={item} href="#" style={{ color:colors.textDim, textDecoration: 'none' }}>{item}</a>)}
         </div>
       </footer>
     </main>

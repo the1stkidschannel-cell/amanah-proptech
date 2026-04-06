@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const mockDrafts = [
       {
         to: "cio@dubai-wealth-fund.com",
-        subject: "Exclusive Sharia-Compliant Real Estate in Germany via BaFin Tokens",
+        subject: "Exclusive Sharia-Compliant Real Estate in Germany via eWpG Tokenization (MVP)",
         snippet: "As the CIO of Dubai Wealth, you understand the regulatory difficulties..."
       },
       {

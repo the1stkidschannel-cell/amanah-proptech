@@ -1,7 +1,7 @@
 /**
  * Amanah PropTech - White-Label Infrastructure API Proxy
  * 
- * This module serves as a proxy to BaFin-regulated White-Label Tokenization 
+ * This module serves as a planned proxy to White-Label Tokenization 
  * providers like Cashlink, Tokenstreet, or Black Manta Capital.
  * 
  * Medvi-Strategy Pivot: We DO NOT mint or manage tokens directly anymore. 

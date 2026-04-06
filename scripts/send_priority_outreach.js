@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
+const nodemailer = require('nodemailer');
 
 // Load environment from .env.local
 const envPath = path.join(__dirname, '../.env.local');
@@ -8,37 +9,39 @@ if (fs.existsSync(envPath)) {
   dotenv.config({ path: envPath });
 }
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const GMAIL_USER = process.env.GMAIL_USER || 'amanah.proptech@gmail.com';
+const GMAIL_PASS = process.env.GMAIL_PASS || 'Antigravity2026!';
 const DRY_RUN = process.argv.includes('--dry-run');
 
 const EMAILS_FILE = path.join(__dirname, '../../emails_to_send.txt');
 const LOG_FILE = path.join(__dirname, '../data/priority_sent_log.json');
 
-async function sendEmail({ to, subject, html, from, reply_to }) {
+// Configure Nodemailer for Gmail
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: GMAIL_USER,
+    pass: GMAIL_PASS
+  }
+});
+
+async function sendEmail({ to, subject, html, fromName }) {
   if (DRY_RUN) {
-    console.log(`[DRY-RUN] To: ${to} | Subject: ${subject}`);
+    console.log(`[DRY-RUN] To: ${to} | Subject: ${subject} | From: ${fromName}`);
     return { success: true, id: 'dry-run-id' };
   }
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: from || 'Amanah PropTech <outreach@amanah-proptech.com>', // Default institutional sender
-        to,
-        reply_to: reply_to || 'chaakhod@proton.me',
-        subject,
-        html,
-      }),
-    });
+    const mailOptions = {
+      from: `"${fromName} | Amanah PropTech" <${GMAIL_USER}>`,
+      to: to,
+      replyTo: 'chaakhod@proton.me',
+      subject: subject,
+      html: html
+    };
 
-    const data = await response.json();
-    if (response.ok) return { success: true, id: data.id };
-    return { success: false, error: data.message || 'Unknown error' };
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, id: info.messageId };
   } catch (err) {
     return { success: false, error: err.message };
   }
@@ -68,12 +71,8 @@ function parseEmails() {
 }
 
 async function run() {
-  console.log('🚀 Starting Priority Outreach...');
-  if (!RESEND_API_KEY && !DRY_RUN) {
-    console.error('❌ Error: RESEND_API_KEY missing in .env.local');
-    process.exit(1);
-  }
-
+  console.log('🚀 Starting Priority Outreach (Gmail/Nodemailer)...');
+  
   const emails = parseEmails();
   console.log(`Parsed ${emails.length} priority emails.\n`);
 
@@ -85,7 +84,7 @@ async function run() {
       to: email.to,
       subject: email.subject,
       html: `<div>${email.body}</div>`,
-      from: `${email.fromName} | Amanah PropTech <outreach@amanah-proptech.com>`
+      fromName: email.fromName
     });
 
     if (res.success) {
@@ -96,8 +95,8 @@ async function run() {
       results.push({ to: email.to, status: 'FAILED', error: res.error, date: new Date().toISOString() });
     }
     
-    // Tiny delay
-    await new Promise(r => setTimeout(r, 1000));
+    // Safety delay to prevent Gmail throttling
+    if (!DRY_RUN) await new Promise(r => setTimeout(r, 3000));
   }
 
   // Log results

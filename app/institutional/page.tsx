@@ -39,7 +39,7 @@ export default function InstitutionalPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-white text-sm">Regulatory & Compliance</h4>
-                  <p className="text-xs text-gray-400 mt-1">Strikte eWpG Umsetzung. Krypto-Verwahr-Lizenzen (BaFin) für rechtssicheres Asset Management ohne Kontrahentenrisiko.</p>
+                  <p className="text-xs text-gray-400 mt-1">Geplante eWpG-Umsetzung. BaFin Tied-Agent-Struktur in Vorbereitung. Alle dargestellten Daten sind simuliert (MVP).</p>
                 </div>
               </div>
               

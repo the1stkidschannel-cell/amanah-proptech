@@ -27,8 +27,9 @@ const COMPLIANCE_DISCLAIMER = `
 <br/><br/>
 <span style="font-size:11px; color: #888;">
 ---<br/>
-Amanah PropTech ist ein Technologieanbieter und vertraglich gebundener Vermittler (Tied Agent)<br/>
-Allänlagevermittlungen unter Haftung unseres lizenzierten White-Label-Partners.<br/>
+Amanah PropTech ist ein Technologie-Start-up (MVP-Phase) und plant eine Zulassung als vertraglich gebundener Vermittler (Tied Agent).<br/>
+Aktuell wird keine erlaubnispflichtige Anlagevermittlung oder Anlageberatung erbracht. Alle dargestellten Daten sind simuliert.<br/>
+Keine Anlageberatung. Technologische Demonstration.<br/>
 This message may contain confidential information intended for institutional investors only.
 </span>
 `;
@@ -51,7 +52,7 @@ function buildEmailHTML(lead: {
       <p>Als <strong>${lead.position}</strong> bei <strong>${lead.company}</strong> wissen Sie, 
       wie wertvoll Sharia-konforme, sachwertgesicherte Allokationen in erstklassige europäische Immobilien sind.</p>
       <p>Amanah PropTech bietet Ihnen direkten, vollständig regulierten Zugang zu tokenisierten deutschen Core-Immobilien 
-      mit einer Zielrendite von <strong>4–6% p.a. (Ijarah)</strong> – vollständig eWpG-konform und BaFin-reguliert.</p>
+      mit einer Zielrendite von <strong>4–6% p.a. (Ijarah)</strong> – geplante eWpG-Konformität, BaFin Tied-Agent-Struktur in Vorbereitung.</p>
       <ul>
         <li>✅ Sharia-Zertifizierung durch unabhängigen Scholars Board</li>
         <li>✅ Tokenisierung auf Basis des deutschen eWpG-Gesetzes</li>
@@ -63,7 +64,7 @@ function buildEmailHTML(lead: {
       <p>als <strong>${lead.position}</strong> bei <strong>${lead.company}</strong> sind Sie 
       stets auf der Suche nach liquiden, sachwertbesicherten Allokationen im regulierten Rahmen.</p>
       <p>Amanah PropTech bietet den ersten vollständig regulierten Zugang zu tokenisierten Core-Immobilien 
-      in Deutschland – <strong>eWpG-konform, BaFin-strukturiert und Sharia-zertifiziert</strong>.</p>
+      in Deutschland – <strong>geplante eWpG-Konformität, BaFin-Struktur in Vorbereitung und angestrebte Sharia-Zertifizierung</strong>.</p>
       <ul>
         <li>✅ Zielrendite: 4,8–6,2% p.a. (Net Ijarah Yield)</li>
         <li>✅ Mindestallokation: €500.000 · Institutional SPV</li>
@@ -86,7 +87,7 @@ function buildEmailHTML(lead: {
         <div style="border-bottom: 2px solid #c5a059; padding-bottom: 20px; margin-bottom: 28px;">
           <h2 style="color: #03362a; font-size: 22px; margin: 0 0 4px 0;">Amanah PropTech</h2>
           <p style="color: #c5a059; margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 0.5px;">
-            SHARIA-COMPLIANT REAL ESTATE · TOKENIZED · BAFIN-REGULATED
+            SHARIA-COMPLIANT REAL ESTATE · TOKENIZED · MVP PHASE
           </p>
         </div>
 

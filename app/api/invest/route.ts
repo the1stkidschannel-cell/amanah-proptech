@@ -83,7 +83,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       transactionId: masterTransactionId,
-      disclaimer: "Amanah PropTech acts exclusively as a Tied Agent (Vertraglich gebundener Vermittler) pursuant to § 2 (10) KWG.",
+      disclaimer: "SIMULATION ONLY: Amanah PropTech is a technological MVP. No BaFin license is held. No real financial transactions are processed. Tied Agent status (§ 2 (10) KWG) is planned but not yet obtained.",
       summary: {
         investor: partnerReg.partnerInvestorId,
         spv: spv.name,

@@ -44,7 +44,7 @@ type LogEntry = { ts: string; phase: string; status: string; msg: string };
 type EngineStats = { total: number; errors: number; lastRun: string | null; phaseCounts: Record<string, number> };
 
 export default function FamilyOfficeDashboard() {
-  const [activeTab, setActiveTab] = useState<"overview" | "subaccounts" | "api" | "reports" | "engine">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "subaccounts" | "assets" | "api" | "reports" | "engine">("overview");
   const [engineLogs, setEngineLogs] = useState<LogEntry[]>([]);
   const [engineStats, setEngineStats] = useState<EngineStats | null>(null);
   const [engineLoading, setEngineLoading] = useState(false);
@@ -99,6 +99,7 @@ export default function FamilyOfficeDashboard() {
         {[
           { id: "overview", label: "Konsolidierte Übersicht", icon: PieChart },
           { id: "subaccounts", label: "Sub-Accounts", icon: FolderTree },
+          { id: "assets", label: "CBRE / JLL Property Feed", icon: Building2 },
           { id: "engine", label: "500M Engine", icon: Zap },
           { id: "api", label: "API Keys & Webhooks", icon: Key },
           { id: "reports", label: "Steuer & Compliance", icon: FileSpreadsheet }
@@ -198,6 +199,53 @@ export default function FamilyOfficeDashboard() {
                    <button className="text-gray-400 hover:text-white flex items-center justify-center w-8 h-8 bg-[#03362a] rounded-full transition-colors shrink-0">
                      <ChevronRight className="w-4 h-4" />
                    </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab Content: CBRE/JLL Asset Feed */}
+      {activeTab === "assets" && (
+        <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-2xl p-6 animate-fade-in-right">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+             <div>
+               <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                 <Building2 className="w-5 h-5 text-[#c5a059]" /> Live API-Feed: Tier-1 Hausverwaltung
+               </h3>
+               <p className="text-sm text-gray-400">Automatische ESG-, Instandhaltungs- und Occupancy-Reports importiert via CBRE & JLL Webhooks.</p>
+             </div>
+             <div className="mt-4 md:mt-0 flex gap-2">
+               <span className="text-[10px] bg-green-500/20 text-green-400 border border-green-500/50 px-2 py-1 rounded-full uppercase tracking-widest font-bold flex items-center gap-1">
+                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> CBRE Sync OK
+               </span>
+               <span className="text-[10px] bg-green-500/20 text-green-400 border border-green-500/50 px-2 py-1 rounded-full uppercase tracking-widest font-bold flex items-center gap-1">
+                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> JLL Sync OK
+               </span>
+             </div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {[
+              { pm: 'CBRE', prop: 'MUC-01 (München Core)', stat: 'Occupancy 100%', event: 'Dachwartung Q3 abgeschlossen. ESG-Rating verbessert.', date: 'Heute, 08:30', alert: false },
+              { pm: 'JLL', prop: 'FRA-04 (Frankfurt Logistics)', stat: 'Occupancy 98%', event: 'Neuer 10-Jahres-Mietvertrag Amazon Logistik Hub signiert.', date: 'Gestern, 14:15', alert: false },
+              { pm: 'CBRE', prop: 'BER-02 (Berlin Office)', stat: 'WALE 6.2 Jahre', event: 'Nebenkostenabrechnung 2025 versendet. Keine Rückstände.', date: 'Gestern, 09:00', alert: false },
+              { pm: 'JLL', prop: 'HAM-01 (Hamburg Mixed-Use)', stat: 'Occupancy 95%', event: 'Brandschutzprüfung ohne Mängel bestanden.', date: '15. Mai 2026', alert: false }
+            ].map((feed, i) => (
+              <div key={i} className="flex gap-4 p-4 bg-[#022c22] border border-[#064e3b] hover:border-[#c5a059]/50 rounded-xl transition-all">
+                <div className="w-12 h-12 bg-[#011a14] rounded-lg border border-[#064e3b] flex items-center justify-center shrink-0">
+                  <span className="text-[10px] font-bold text-gray-300 uppercase">{feed.pm}</span>
+                </div>
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <h4 className="font-bold text-white text-sm">{feed.prop}</h4>
+                    <span className="text-xs text-gray-500">{feed.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-[9px] bg-[#03362a] text-[#c5a059] px-2 py-0.5 rounded tracking-widest uppercase">{feed.stat}</span>
+                  </div>
+                  <p className="text-sm text-gray-400">{feed.event}</p>
                 </div>
               </div>
             ))}
