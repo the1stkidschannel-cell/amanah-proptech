@@ -3,7 +3,8 @@ import { Resend } from 'resend';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, doc, updateDoc, query, where, getDocs } from 'firebase/firestore';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-load Resend to prevent build-time crashes when API key is missing
+const getResend = () => new Resend(process.env.RESEND_API_KEY || 're_123');
 const REPLY_TO = process.env.REPLY_TO_EMAIL || 'deals@amanah-proptech.com';
 const CALENDLY = process.env.CALENDLY_LINK  || 'https://calendly.com/amanah-proptech/15min';
 
@@ -147,7 +148,7 @@ export async function POST(req: Request) {
     }
 
     // Live send via Resend
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await getResend().emails.send({
       from: 'Amanah PropTech <deals@amanah-proptech.com>',
       to: [lead.email],
       replyTo: REPLY_TO,
