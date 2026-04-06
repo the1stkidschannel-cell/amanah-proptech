@@ -7,10 +7,34 @@ import { useAuth } from "@/context/AuthContext";
 export default function ReferralPage() {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [claiming, setClaiming] = useState<string | null>(null);
+  const [claimSuccess, setClaimSuccess] = useState<any>(null);
   
   // Simulated referral code based on user
   const referralCode = user?.uid ? `AMN-${user.uid.substring(0, 6).toUpperCase()}` : "AMN-VIP26X";
   const referralLink = `https://amanah-proptech.com/invite/${referralCode}`;
+
+  const handleClaim = async (referral: any) => {
+    if (referral.status !== "Investiert") return;
+    setClaiming(referral.id);
+    
+    try {
+      const res = await fetch("/api/referral/claim", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "claim_reward", referralId: referral.id, amount: 250 })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setClaimSuccess(data);
+        setTimeout(() => setClaimSuccess(null), 4000);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setClaiming(null);
+    }
+  };
 
   const handleCopy = () => {
     navigator.clipboard.writeText(referralLink);
@@ -25,9 +49,9 @@ export default function ReferralPage() {
   ];
 
   const history = [
-    { name: "Ahmed K.", date: "02. Apr 2026", status: "Investiert", reward: "+ 250 €" },
-    { name: "Sara F.", date: "28. Mär 2026", status: "Registriert (KYC pending)", reward: "Ausstehend" },
-    { name: "Leila A.", date: "15. Mär 2026", status: "Eingeladen", reward: "-" },
+    { id: "REF-101", name: "Ahmed K.", date: "02. Apr 2026", status: "Investiert", reward: "+ 250 €" },
+    { id: "REF-102", name: "Sara F.", date: "28. Mär 2026", status: "Registriert (KYC pending)", reward: "Ausstehend" },
+    { id: "REF-103", name: "Leila A.", date: "15. Mär 2026", status: "Eingeladen", reward: "-" },
   ];
 
   return (
@@ -116,9 +140,17 @@ export default function ReferralPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm font-bold text-right text-white">
-                    <span className={h.status === "Investiert" ? "text-green-400" : "text-gray-500"}>
-                      {h.reward}
-                    </span>
+                    {h.status === "Investiert" ? (
+                      <button 
+                        onClick={() => handleClaim(h)}
+                        disabled={claiming === h.id}
+                        className="bg-green-500/20 hover:bg-green-500/30 text-green-400 px-3 py-1.5 rounded-lg transition-colors flex items-center justify-end ml-auto gap-2"
+                      >
+                         {claiming === h.id ? <span className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin"></span> : <span>{h.reward} Auszahlen</span>}
+                      </button>
+                    ) : (
+                       <span className="text-gray-500">{h.reward}</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -126,6 +158,16 @@ export default function ReferralPage() {
           </table>
         </div>
       </div>
+
+      {claimSuccess && (
+        <div className="fixed bottom-6 right-6 z-50 bg-green-500/10 border border-green-500/50 backdrop-blur-md text-white px-6 py-4 rounded-2xl shadow-2xl animate-fade-in-up flex items-center gap-4">
+          <div className="bg-green-500/20 p-2 rounded-full"><CheckCircle className="w-6 h-6 text-green-400" /></div>
+          <div>
+            <p className="font-bold text-white">Auszahlung erfolgreich!</p>
+            <p className="text-sm text-green-400">+ € {claimSuccess.amountCredited} ins Halal Wallet transferiert.</p>
+          </div>
+        </div>
+      )}
 
       {/* How it works */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
