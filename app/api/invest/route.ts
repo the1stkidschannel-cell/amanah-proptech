@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { CashlinkProvider } from "@/lib/cashlink";
+import { executeInvestmentACID } from "@/lib/firebase/transactions";
 
 interface InvestRequest {
   userId: string;
@@ -50,7 +51,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "SPV nicht gefunden." }, { status: 404 });
     }
 
-    // ── STEP 1: Tied Agent API - Register user with regulated partner ──
+    // ── STEP 1: Internal ACID Transaction Ledger (Task 059) ──
+    // Ensures internal balance and property cap consistency
+    const internalTx = await executeInvestmentACID(body.userId, body.spvId, body.amount);
+
+    // ── STEP 2: Tied Agent API (Partner Sync) ──
     const partnerReg = await CashlinkProvider.registerInvestor({
       email: body.userEmail || "investor@amanah.com",
       name: body.userName || "Amanah Investor",
@@ -58,10 +63,10 @@ export async function POST(req: Request) {
     });
 
     if (!partnerReg.success) {
-      return NextResponse.json({ error: "White-Label Partner Registration Failed" }, { status: 502 });
+      return NextResponse.json({ error: "Partner Sync Failed" }, { status: 502 });
     }
 
-    // ── STEP 2: Tied Agent API - Execute Investment through Partner (eWpG) ──
+    // ── STEP 3: Execute Investment through Partner (eWpG) ──
     const investmentResponse = await CashlinkProvider.executeInvestment({
       investorId: partnerReg.partnerInvestorId,
       isin: spv.isin,

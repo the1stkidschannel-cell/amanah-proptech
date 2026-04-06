@@ -16,7 +16,8 @@ import {
   Layers,
   Zap,
   Calendar,
-  Ruler
+  Ruler,
+  RefreshCw
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { addProperty } from "@/lib/firebase/properties";
@@ -25,6 +26,9 @@ export default function AssetOriginationWizard() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isDeploying, setIsDeploying] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [aiInput, setAiInput] = useState("");
+  const [showAiInput, setShowAiInput] = useState(false);
   const [deploymentLog, setDeploymentLog] = useState<string[]>([]);
   
   // Form State
@@ -40,6 +44,35 @@ export default function AssetOriginationWizard() {
     tokenPrice: "500",
     shariaStructure: "Ijarah (Leasing)",
   });
+
+  const handleAiExtract = async () => {
+    if (!aiInput.trim()) return;
+    setIsExtracting(true);
+    try {
+      const res = await fetch("/api/admin/properties/ai-extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ input: aiInput }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setFormData(prev => ({
+          ...prev,
+          name: data.name || prev.name,
+          location: data.location || prev.location,
+          description: data.description || prev.description,
+          targetVolume: data.targetVolume?.toString() || prev.targetVolume,
+          yield: data.yield?.toString() || prev.yield,
+          tokenSymbol: data.tokenSymbol || prev.tokenSymbol || data.name?.slice(0, 3).toUpperCase(),
+        }));
+        setShowAiInput(false);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   const handleNext = () => setStep((s) => Math.min(s + 1, 4));
   const handlePrev = () => setStep((s) => Math.max(s - 1, 1));
@@ -115,6 +148,46 @@ export default function AssetOriginationWizard() {
         <p className="text-gray-400 mt-2">
           Onboarding-Prozess für neue Immobilien. Erstellt die Datenbank-Einträge, verknüpft eWpG Dokumente und generiert live einen eigenen Smart Contract pro Immobilie.
         </p>
+      </div>
+
+      {/* AI Sourcing Engine (Task 054) */}
+      <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-2xl p-6 shadow-lg shadow-blue-500/5 transition-all">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex items-center gap-3">
+             <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                <Zap className="w-5 h-5 text-blue-400" />
+             </div>
+             <div>
+                <h4 className="font-bold text-white text-sm">Gemini AI Deal-Extractor</h4>
+                <p className="text-[10px] text-blue-300 uppercase tracking-widest font-bold">Turbo-All Scaling Active</p>
+             </div>
+          </div>
+          <button 
+            onClick={() => setShowAiInput(!showAiInput)}
+            className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-xs font-bold rounded-xl border border-blue-500/40 transition-all flex items-center gap-2"
+          >
+             {showAiInput ? "Abbrechen" : "🪄 AI-AutoFill (Exposé einfügen)"}
+          </button>
+        </div>
+
+        {showAiInput && (
+          <div className="mt-4 space-y-3 animate-fade-in-down">
+             <textarea 
+               value={aiInput}
+               onChange={(e) => setAiInput(e.target.value)}
+               placeholder="URL oder raw text hier einfügen (z.B. Immobilienscout24 Exposé / PDF Inhalt)..."
+               className="w-full bg-[#022c22] border border-blue-500/20 rounded-xl p-4 text-sm text-white focus:border-blue-500/50 outline-none h-40"
+             />
+             <button 
+               onClick={handleAiExtract}
+               disabled={isExtracting}
+               className="bg-[#c5a059] hover:bg-[#b08d48] text-[#022c22] w-full py-3 rounded-xl text-sm font-bold shadow-lg transition-all flex justify-center items-center gap-2 disabled:grayscale"
+             >
+               {isExtracting ? <RefreshCw className="w-4 h-4 animate-spin text-[#022c22]" /> : <CheckCircle2 className="w-4 h-4" />}
+               {isExtracting ? "Analysiere & Extrahiere..." : "Daten extrahieren & Formular befüllen"}
+             </button>
+          </div>
+        )}
       </div>
 
       {/* Stepper */}
