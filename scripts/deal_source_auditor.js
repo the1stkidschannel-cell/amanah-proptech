@@ -26,36 +26,6 @@ const properties = [
         managementFeePercent: 2.0,
         otherCostsMonthly: 1800,
         targetYield: 5.2
-    },
-    {
-        id: "pan-european-logistics",
-        name: "Pan-European Logistics Portfolio",
-        purchasePrice: 195000000,
-        monthlyGrossRent: 920000,
-        maintenanceBufferPercent: 5,
-        managementFeePercent: 1.5,
-        otherCostsMonthly: 8000,
-        targetYield: 5.24
-    },
-    {
-        id: "premium-office-frankfurt",
-        name: "Premium Office Tower 'Alpha' FRA",
-        purchasePrice: 140000000,
-        monthlyGrossRent: 660000,
-        maintenanceBufferPercent: 4,
-        managementFeePercent: 1.2,
-        otherCostsMonthly: 15000,
-        targetYield: 5.23
-    },
-    {
-        id: "healthcare-portfolio-bayern",
-        name: "Healthcare & Senior Living Portfolio Bayern",
-        purchasePrice: 155000000,
-        monthlyGrossRent: 720000,
-        maintenanceBufferPercent: 5,
-        managementFeePercent: 1.5,
-        otherCostsMonthly: 12000,
-        targetYield: 5.11
     }
 ];
 
