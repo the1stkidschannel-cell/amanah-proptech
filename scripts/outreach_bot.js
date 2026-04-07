@@ -149,9 +149,9 @@ async function runOutreach() {
   const now = new Date();
   const hour = now.getHours();
   const day = now.getDay();
-  // MO-FR (1-5), 08:00 - 18:00
-  if (!process.argv.includes('--force') && (day === 0 || day === 6 || hour < 8 || hour >= 18)) {
-    console.log(`[PAUSE] Aktuelle Uhrzeit (${now.toLocaleTimeString()}) ist ausserhalb der Geschäftszeiten (Mo-Fr 08:00-18:00). Bot pausiert zum Schutz der B2B Reputation.`);
+  // MO-FR (1-5), 09:00 - 15:00
+  if (!process.argv.includes('--force') && (day === 0 || day === 6 || hour < 9 || hour >= 15)) {
+    console.log(`[PAUSE] Aktuelle Uhrzeit (${now.toLocaleTimeString()}) ist ausserhalb der Geschäftszeiten (Mo-Fr 09:00-15:00). Bot pausiert zum Schutz der B2B Reputation.`);
     return { sent: 0, failed: 0 };
   }
 

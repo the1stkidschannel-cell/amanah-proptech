@@ -46,6 +46,13 @@ export default function InvestPage() {
   }, [search, filterType, filterYield, showInstitutionalOnly, properties]);
 
   const uniqueTypes = ["Alle", "Mehrfamilienhaus", "Wohnanlage", "Bürogebäude", "Geschäftshaus"];
+  const typeMap: Record<string, string> = {
+    "Alle": t('type_all'),
+    "Mehrfamilienhaus": t('type_multifamily'),
+    "Wohnanlage": t('type_residential'),
+    "Bürogebäude": t('type_office'),
+    "Geschäftshaus": t('type_commercial')
+  };
 
   return (
     <div className="space-y-8 animate-fade-in-up" dir={dir}>
@@ -100,7 +107,7 @@ export default function InvestPage() {
                     <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${filterType === type ? 'bg-[#c5a059] border-[#c5a059]' : 'border-[#064e3b] group-hover:border-[#c5a059]'}`}>
                       {filterType === type && <CheckCircle className="w-3 h-3 text-white" />}
                     </div>
-                    <span className={`text-sm ${filterType === type ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>{type}</span>
+                    <span className={`text-sm ${filterType === type ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'}`}>{typeMap[type] || type}</span>
                     <input type="radio" className="hidden" checked={filterType === type} onChange={() => setFilterType(type)} />
                   </label>
                 ))}
@@ -148,7 +155,7 @@ export default function InvestPage() {
           {loading ? (
              <div className="flex flex-col items-center justify-center p-32">
                 <Loader2 className="w-10 h-10 text-[#c5a059] animate-spin mb-4" />
-                <p className="text-gray-400">Lade Live-Projekte...</p>
+                <p className="text-gray-400">{t('loading_projects')}</p>
              </div>
           ) : filteredProperties.length === 0 ? (
             <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-12 text-center">
@@ -183,7 +190,7 @@ export default function InvestPage() {
                     
                     <div className="absolute top-3 right-3 bg-[#064e3b]/90 backdrop-blur-sm text-[#d4af37] text-[10px] uppercase font-bold px-3 py-1 rounded-full flex items-center space-x-1.5 z-10">
                       <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                      <span>{p.status === "Live" ? "Funding aktiv" : "Geschlossen"}</span>
+                      <span>{p.status === "Live" ? t('status_live') : t('status_closed')}</span>
                     </div>
                     <div className="absolute top-3 left-3 bg-green-600/90 backdrop-blur-sm text-white text-[10px] uppercase font-bold px-3 py-1 rounded-full flex items-center space-x-1 z-10">
                       <ShieldCheck className="w-3 h-3" />
@@ -194,7 +201,7 @@ export default function InvestPage() {
                       <h3 className="text-lg font-bold text-white group-hover:text-[#d4af37] transition-colors line-clamp-1">{p.name}</h3>
                       <p className="text-xs text-gray-300 flex items-center space-x-1 mt-0.5">
                         <MapPin className="w-3 h-3" />
-                        <span className="truncate">{p.location} · {p.type}</span>
+                        <span className="truncate">{p.location} · {typeMap[p.type] || p.type}</span>
                       </p>
                     </div>
                   </div>
@@ -206,19 +213,19 @@ export default function InvestPage() {
                         <p className="text-[11px] sm:text-sm font-bold text-white">{(p.targetVolume / 1000000).toFixed(1)}M</p>
                       </div>
                       <div>
-                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">Rendite</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">{t('yield')}</p>
                         <p className="text-[11px] sm:text-sm font-bold text-[#d4af37]">{p.yield}%</p>
                       </div>
                       <div>
-                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">Laufzeit</p>
+                        <p className="text-[9px] sm:text-[10px] text-gray-500 uppercase tracking-wider">{t('runtime')}</p>
                         <p className="text-[11px] sm:text-sm font-bold text-white">{p.holdingPeriod.split(" ")[0]}J</p>
                       </div>
                     </div>
 
                     <div>
                       <div className="flex justify-between text-xs text-gray-400 mb-1.5 px-1">
-                        <span>Funded: <strong className="text-white">{p.funded}%</strong></span>
-                        <span>ab <strong className="text-white">{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(p.minInvest)} €</strong></span>
+                        <span>{t('funded')}: <strong className="text-white">{p.funded}%</strong></span>
+                        <span>{t('from')} <strong className="text-white">{new Intl.NumberFormat(lang === 'de' ? 'de-DE' : 'en-US').format(p.minInvest)} €</strong></span>
                       </div>
                       <div className="w-full bg-[#022c22] rounded-full h-1.5 overflow-hidden">
                         <div

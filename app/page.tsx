@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { useMemo } from "react";
 import {
   AreaChart,
@@ -15,6 +16,7 @@ import { TrendingUp, Landmark, HandCoins, BarChart3, ShieldCheck, FileText, Arro
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const displayName = user?.displayName || "Investor";
 
   /* Chart data: Halal wealth trajectory */
@@ -29,10 +31,10 @@ export default function DashboardPage() {
   }, []);
 
   const kpis = [
-    { label: "Gesamtes Halal-Portfolio", value: "15.000 €", icon: Landmark, color: "text-[#d4af37]" },
-    { label: "Erhaltene Mieten (Ijarah)", value: "340 €", icon: HandCoins, color: "text-green-400" },
-    { label: "Performance", value: "+4,8 % p.a.", icon: TrendingUp, color: "text-emerald-400" },
-    { label: "Aktive Token", value: "3", icon: BarChart3, color: "text-[#c5a059]" },
+    { label: t("total_halal_portfolio"), value: "15.000 €", icon: Landmark, color: "text-[#d4af37]" },
+    { label: t("received_ijarah"), value: "340 €", icon: HandCoins, color: "text-green-400" },
+    { label: t("performance_pa"), value: "+4,8 % p.a.", icon: TrendingUp, color: "text-emerald-400" },
+    { label: t("active_tokens"), value: "3", icon: BarChart3, color: "text-[#c5a059]" },
   ];
 
   return (
@@ -40,10 +42,10 @@ export default function DashboardPage() {
       {/* Greeting */}
       <div>
         <h1 className="text-2xl lg:text-3xl font-bold text-white">
-          Alhamdulillah, willkommen zurück, {displayName}.
+          {t("greeting_alhamdulillah")}{displayName}.
         </h1>
         <p className="text-gray-400 mt-1">
-          Ihr Riba-freies Immobilienportfolio im Überblick.
+          {t("portfolio_overview")}
         </p>
       </div>
 
@@ -54,15 +56,15 @@ export default function DashboardPage() {
              <ShieldCheck className="w-4 h-4 text-yellow-500" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white mb-1">KYC-Verifizierung ausstehend</h3>
-            <p className="text-xs text-gray-300">Um uneingeschränkt investieren zu können, schließen Sie bitte Ihr Onboarding gemäß Geldwäschegesetz (GwG) ab.</p>
+            <h3 className="text-sm font-bold text-white mb-1">{t("kyc_pending_title")}</h3>
+            <p className="text-xs text-gray-300">{t("kyc_pending_desc")}</p>
           </div>
         </div>
         <button 
           onClick={() => window.location.href = "/onboarding"}
           className="shrink-0 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors"
         >
-           Jetzt verifizieren
+           {t("verify_now")}
         </button>
       </div>
 
@@ -73,15 +75,15 @@ export default function DashboardPage() {
           <div className="bg-[#c5a059]/20 p-2 rounded-lg">
             <FileText className="w-5 h-5 text-[#c5a059]" />
           </div>
-          <h2 className="text-xl font-bold text-white uppercase tracking-widest">Executive Summary</h2>
+          <h2 className="text-xl font-bold text-white uppercase tracking-widest">{t("exec_summary")}</h2>
         </div>
         <p className="text-lg text-gray-300 mb-6 max-w-2xl leading-relaxed">
-          Eine im Aufbau befindliche Plattform zur Verbindung von MENA-Kapital mit europäischen Core-Immobilien via eWpG-Tokenisierung. Geplante Sharia-Zertifizierung.
+          {t("exec_summary_desc")}
         </p>
         <div className="flex flex-wrap gap-3">
-           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">€ 500M Target AUM</span>
-           <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-bold rounded-full uppercase">eWpG (geplant)</span>
-           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">AAOIFI (Ziel)</span>
+           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">{t("target_aum")}</span>
+           <span className="px-3 py-1 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-[10px] font-bold rounded-full uppercase">{t("ewpg_planned")}</span>
+           <span className="px-3 py-1 bg-[#c5a059]/10 border border-[#c5a059]/30 text-[#d4af37] text-[10px] font-bold rounded-full uppercase">{t("aaoifi_target")}</span>
         </div>
       </div>
 
@@ -106,10 +108,10 @@ export default function DashboardPage() {
       {/* Chart */}
       <div className="bg-[#03362a] border border-[#064e3b]/40 rounded-xl p-6">
         <h3 className="text-lg font-semibold text-white mb-1">
-          Riba-freier Vermögensverlauf
+          {t("wealth_trajectory")}
         </h3>
         <p className="text-sm text-gray-400 mb-6">
-          Diminishing Musharakah – Ihr wachsender Eigentumsanteil (letzte 12 Monate)
+          {t("musharakah_desc")}
         </p>
         <div className="h-[340px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -132,8 +134,8 @@ export default function DashboardPage() {
                 labelStyle={{ color: "#c5a059" }}
                 formatter={(value: any) => [`${new Intl.NumberFormat("de-DE").format(value)} €`]}
               />
-              <Area type="monotone" dataKey="Portfolio" stroke="#c5a059" strokeWidth={2} fill="url(#gradPortfolio)" name="Portfoliowert" />
-              <Area type="monotone" dataKey="Ijarah" stroke="#34d399" strokeWidth={2} fill="url(#gradIjarah)" name="Monatsmiete" />
+              <Area type="monotone" dataKey="Portfolio" stroke="#c5a059" strokeWidth={2} fill="url(#gradPortfolio)" name={t("portfolio_value")} />
+              <Area type="monotone" dataKey="Ijarah" stroke="#34d399" strokeWidth={2} fill="url(#gradIjarah)" name={t("monthly_rent")} />
             </AreaChart>
           </ResponsiveContainer>
         </div>
