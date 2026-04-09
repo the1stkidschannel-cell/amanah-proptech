@@ -22,17 +22,17 @@ export default function DashboardPage() {
   /* Chart data: Halal wealth trajectory */
   const chartData = useMemo(() => {
     const months = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
-    let portfolio = 15000;
+    let portfolio = 50000000; // 50M
     return months.map((m) => {
       const ijarah = Math.round(portfolio * 0.004);
-      portfolio += ijarah + Math.round(Math.random() * 60 - 10);
+      portfolio += ijarah + Math.round(Math.random() * 2000000 - 500000);
       return { month: m, Portfolio: portfolio, Ijarah: ijarah };
     });
   }, []);
 
   const kpis = [
-    { label: t("total_halal_portfolio"), value: "15.000 €", icon: Landmark, color: "text-[#d4af37]" },
-    { label: t("received_ijarah"), value: "340 €", icon: HandCoins, color: "text-green-400" },
+    { label: t("total_halal_portfolio"), value: "50.000.000 €", icon: Landmark, color: "text-[#d4af37]" },
+    { label: t("received_ijarah"), value: "1.240.000 €", icon: HandCoins, color: "text-green-400" },
     { label: t("performance_pa"), value: "+4,8 % p.a.", icon: TrendingUp, color: "text-emerald-400" },
     { label: t("active_tokens"), value: "3", icon: BarChart3, color: "text-[#c5a059]" },
   ];
