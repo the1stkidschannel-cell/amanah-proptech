@@ -118,5 +118,65 @@
     "status": "FAILED",
     "error": "Invalid login: 534-5.7.9 Application-specific password required. For more information, go to\n534 5.7.9  https://support.google.com/mail/?p=InvalidSecondFactor 5b1f17b1804b1-488b6ff70bcsm137313815e9.14 - gsmtp",
     "date": "2026-04-06T22:45:16.735Z"
+  },
+  {
+    "to": "info@bescheinigung-forschungszulage.de",
+    "status": "SENT",
+    "id": "dry-run-id",
+    "date": "2026-04-07T08:32:07.226Z"
+  },
+  {
+    "to": "zim@euronorm.de",
+    "status": "SENT",
+    "id": "dry-run-id",
+    "date": "2026-04-07T08:32:07.227Z"
+  },
+  {
+    "to": "kmu-innovativ-ikt@vdivde-it.de",
+    "status": "SENT",
+    "id": "dry-run-id",
+    "date": "2026-04-07T08:32:07.227Z"
+  },
+  {
+    "to": "poststelle@bmuv.bund.de",
+    "status": "SENT",
+    "id": "dry-run-id",
+    "date": "2026-04-07T08:32:07.227Z"
+  },
+  {
+    "to": "preseed@startupbw.de",
+    "status": "SENT",
+    "id": "dry-run-id",
+    "date": "2026-04-07T08:32:07.227Z"
+  },
+  {
+    "to": "info@bescheinigung-forschungszulage.de",
+    "status": "SENT",
+    "id": "<3c7f3d71-5d71-9ba8-adf9-9fc6986eec97@gmail.com>",
+    "date": "2026-04-07T08:32:16.343Z"
+  },
+  {
+    "to": "zim@euronorm.de",
+    "status": "SENT",
+    "id": "<3ffaa6f0-f722-d75c-f585-eec95dc47697@gmail.com>",
+    "date": "2026-04-07T08:32:20.369Z"
+  },
+  {
+    "to": "kmu-innovativ-ikt@vdivde-it.de",
+    "status": "SENT",
+    "id": "<54f8b77a-85a5-5a03-fbc0-95a52c9ec44f@gmail.com>",
+    "date": "2026-04-07T08:32:24.378Z"
+  },
+  {
+    "to": "poststelle@bmuv.bund.de",
+    "status": "SENT",
+    "id": "<4b905a50-7a53-02a5-26fa-dd9fc7d1b491@gmail.com>",
+    "date": "2026-04-07T08:32:28.338Z"
+  },
+  {
+    "to": "preseed@startupbw.de",
+    "status": "SENT",
+    "id": "<bfe81d25-e6ff-a88e-a876-9d32e47b5ba8@gmail.com>",
+    "date": "2026-04-07T08:32:32.338Z"
   }
 ]

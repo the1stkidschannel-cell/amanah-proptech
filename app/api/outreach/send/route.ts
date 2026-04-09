@@ -41,37 +41,23 @@ function buildEmailHTML(lead: {
   region: string;
   calendlyLink: string;
 }) {
-  const isMENA = lead.region === 'MENA';
+  const greeting = `Sehr geehrte(r) ${lead.name},`;
 
-  const greeting = isMENA
-    ? `Salam ${lead.name},`
-    : `Sehr geehrte(r) ${lead.name},`;
-
-  const body = isMENA
-    ? `
-      <p>Als <strong>${lead.position}</strong> bei <strong>${lead.company}</strong> wissen Sie, 
-      wie wertvoll Sharia-konforme, sachwertgesicherte Allokationen in erstklassige europäische Immobilien sind.</p>
-      <p>Amanah PropTech bietet Ihnen direkten, vollständig regulierten Zugang zu tokenisierten deutschen Core-Immobilien 
-      mit einer Zielrendite von <strong>4–6% p.a. (Ijarah)</strong> – geplante eWpG-Konformität, BaFin Tied-Agent-Struktur in Vorbereitung.</p>
-      <ul>
-        <li>✅ Sharia-Zertifizierung durch unabhängigen Scholars Board</li>
-        <li>✅ Tokenisierung auf Basis des deutschen eWpG-Gesetzes</li>
-        <li>✅ Mindestallokation: €500.000 · Dedicated SPV-Struktur</li>
-      </ul>
-      <p>Für ein kurzes Briefing (15 Minuten) stehe ich Ihnen gerne zur Verfügung:</p>
-    `
-    : `
-      <p>als <strong>${lead.position}</strong> bei <strong>${lead.company}</strong> sind Sie 
-      stets auf der Suche nach liquiden, sachwertbesicherten Allokationen im regulierten Rahmen.</p>
-      <p>Amanah PropTech bietet den ersten vollständig regulierten Zugang zu tokenisierten Core-Immobilien 
-      in Deutschland – <strong>geplante eWpG-Konformität, BaFin-Struktur in Vorbereitung und angestrebte Sharia-Zertifizierung</strong>.</p>
-      <ul>
-        <li>✅ Zielrendite: 4,8–6,2% p.a. (Net Ijarah Yield)</li>
-        <li>✅ Mindestallokation: €500.000 · Institutional SPV</li>
-        <li>✅ White-Label Due-Diligence-Datenraum verfügbar</li>
-      </ul>
-      <p>Ich schlage ein kurzes Onboarding-Gespräch vor:</p>
-    `;
+  const body = `
+      <p>institutionelles Kapital aus dem islamischen Raum scheut oft den deutschen Immobilienmarkt – entweder aufgrund der fehlenden Sharia-Konformität (Riba/Zinsen in den Kapitalstrukturen) oder wegen massiver bürokratischer Hürden und teurer SPV-Gründungen.</p>
+      <p><strong>Amanah PropTech löst dieses Problem vollständig.</strong></p>
+      <p>Wir bieten Ihnen als B2B-Plattform direkten Zugang zu Off-Market Core- und Core+-Immobilien im DACH-Raum. Unser Modell ist zu 100 % Sharia-konform (Ijarah / Diminishing Musharakah) und nach deutschem Aufsichtsrecht (eWpG) reguliert.</p>
+      
+      <p><strong>Unser Asset-Light-Ansatz für Sie:</strong></p>
+      <ol style="padding-left: 20px;">
+        <li style="margin-bottom: 8px;"><strong>Sourcing:</strong> Wir identifizieren hochkarätige, eigenkapitalfinanzierte Immobilienprojekte.</li>
+        <li style="margin-bottom: 8px;"><strong>Structuring & Tokenisierung:</strong> Wir überführen den Deal über unsere BaFin-regulierte White-Label-Infrastruktur in liquide, digitale Genussrechte (Smart Contracts).</li>
+        <li><strong>Ihr Vorteil:</strong> Sie investieren direkt und zinsfrei in deutsche Bestandsimmobilien, verwalten Ihr Portfolio über unser VIP-Dashboard (SaaS) und sparen sich monatelange Due-Diligence- und Notar-Prozesse. Das physische Property Management wird von Tier-1-Partnern (z.B. CBRE) übernommen.</li>
+      </ol>
+      
+      <p>Wir haben aktuell eine exklusive Pipeline an DACH-Immobilien, die für eine tokenisierte Übernahme strukturiert werden.</p>
+      <p>Gerne zeige ich Ihnen in einem kurzen, 10-minütigen Call, wie unser Deal-Flow und das B2B-Dashboard funktionieren. Wann passt es Ihnen in der kommenden Woche?</p>
+  `;
 
   return `
     <!DOCTYPE html>
@@ -130,10 +116,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing lead data (email, name required)' }, { status: 400 });
     }
 
-    const isMENA = lead.region === 'MENA';
-    const subject = isMENA
-      ? `Islamic Finance: Accessing German Real Estate via eWpG Tokenization`
-      : `Sharia-konforme Immobilien (DACH) – Tokenisierter Core-Zugang für ${lead.company}`;
+    const subject = `Exklusiver Zugang: BaFin- & Sharia-konforme Core-Immobilien (DACH-Region) via eWpG`;
 
     const htmlContent = buildEmailHTML({
       name: lead.name,

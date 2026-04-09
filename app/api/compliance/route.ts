@@ -43,10 +43,13 @@ interface AuditReport {
 // ─────────────────────────────────────────────────────────────────────
 
 // Initialize OpenAI client
-// It will look for process.env.OPENAI_API_KEY automatically
+// It will look for process.env.OPENAI_API_KEY automatically, or use LOCAL_LLM_URL
 const openai = process.env.OPENAI_API_KEY 
-  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  : null;
+  ? new OpenAI({ 
+      apiKey: process.env.OPENAI_API_KEY,
+      baseURL: process.env.LOCAL_LLM_URL || undefined 
+    })
+  : (process.env.LOCAL_LLM_URL ? new OpenAI({ apiKey: "local", baseURL: process.env.LOCAL_LLM_URL }) : null);
 
 /**
  * Extracts text from the uploaded file buffer.
@@ -203,6 +206,30 @@ export async function POST(req: Request) {
     } else {
       console.warn("OPENAI_API_KEY missing - using fallback mock.");
       report = getFallbackReport(fileInfo);
+    }
+
+    // HITL (Human-in-the-Loop) logic
+    if (report.status === "NON_COMPLIANT") {
+      try {
+        const { db } = await import("@/lib/firebase");
+        const { doc, setDoc } = await import("firebase/firestore");
+        const { sendApprovalEmail } = await import("@/lib/email");
+
+        // Create a unique report ID
+        const docId = `audit_${Date.now()}`;
+        if (db) {
+          await setDoc(doc(db, "audits", docId), report);
+        }
+
+        const findingsSummary = report.findings.map(f => f.classification).join(', ');
+        await sendApprovalEmail("compliance", docId, {
+          fileName: report.fileName,
+          findingsSummary
+        });
+
+      } catch (e) {
+         console.error("Failed to trigger Sharia HITL", e);
+      }
     }
 
     return NextResponse.json(report, { status: 200 });

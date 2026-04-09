@@ -89,33 +89,32 @@ function buildEmailHTML(lead) {
 
   const body = isMENA
     ? `
-      <p>As the <strong>${lead.Position}</strong> at <strong>${lead.Company}</strong>, you recognize the critical need for 
-      secure, Sharia-compliant diversification into European Core Real Estate.</p>
-      <p>Amanah PropTech is currently developing an institutional-grade digital bridge (targeting a BaFin Tied-Agent setup). We utilize the German Electronic Securities Act (eWpG) 
-      to tokenize Tier-1 commercial real estate into digital shares on the Polygon blockchain. 
-      The physical objects will be managed by global partners like CBRE and JLL, while the Smart Contract executes an AAOIFI-certified Ijarah structure.</p>
-      <p>We are currently onboarding strategic Institutional Partners for our Private Beta as we scale toward our €2.5B AUM target. 
-      Partners receive early access to our proprietary White-Label SaaS Portal for seamless global allocation management.</p>
-      <ul>
-        <li>✅ Planned 100% BaFin Tied-Agent Compliance & Sharia-Certification</li>
-        <li>✅ Access to Euro-DACH Core Assets via Polygon eWpG Tokens</li>
-        <li>✅ Real-time API reporting from Tier-1 Property Managers</li>
+      <p>institutionelles Kapital aus dem islamischen Raum sucht zunehmend nach Wegen in den deutschen Immobilienmarkt, scheitert jedoch oft am Fehlen Sharia-konformer Strukturen (Stichwort: Zinsansprüche in den Kapitalstrukturen) oder an hochkomplexen SPV-Gründungen.</p>
+      <p>Mit <strong>Amanah PropTech</strong> bauen wir aktuell eine spezialisierte B2B-Technologieplattform auf, die genau dieses Problem technologisch löst.</p>
+      <p>Wir arbeiten an einem Asset-Light Broker-Modell, das den direkten Zugang zu Off-Market Core-Immobilien (DACH) ermöglicht. Perspektivisch planen wir perspektivisch eine 100% Sharia-konforme Umsetzung (mittels Ijarah / Diminishing Musharakah Konstrukten), angebunden an das deutsche Gesetz über elektronische Wertpapiere (eWpG).</p>
+      <p>Derzeit befindet sich unsere Infrastruktur in der <strong>Pilotphase / MVP-Demonstration</strong>. Das bedeutet: Wir testen die Blockchain-Abwicklung (Kryptowertpapierregister) aktuell im simulierten Umfeld, um eine lückenlose, riba-freie Tokenisierung für unsere zukünftigen regulierten White-Label Partner aufzusetzen.</p>
+      <p><strong>Unsere Zielsetzung für den Marktstart:</strong></p>
+      <ul style="padding-left: 20px;">
+        <li>🔹 Vorbereitung zur Auflage tokenisierter, Sharia-konformer Core-Assets</li>
+        <li>🔹 Vermeidung teurer SPV-Mantelstrukturen durch direkten eWpG-Bezug</li>
+        <li>🔹 Bereitstellung eines institutionellen B2B SaaS-Dashboards zur simplen Portfolio-Kontrolle</li>
       </ul>
-      <p>I would like to invite you for a 15-minute strategic briefing to discuss potential synergies:</p>
+      <p>Wir befinden uns in einer frühen Aufbau- und Validierungsphase und sprechen derzeit exklusiv mit ausgewählten Family Offices über Anforderungen und zukünftige strategische Partnerschaften.</p>
+      <p>Ich würde Sie sehr gerne zu einem 15-minütigen strategischen Briefing einladen, um Ihnen unser Pilot-Projekt vorzustellen:</p>
     `
     : `
-      <p>als <strong>${lead.Position}</strong> bei <strong>${lead.Company}</strong> suchen Sie nach 
-      innovativen, regulierten Wegen zur Diversifikation von institutionellem Kapital.</p>
-      <p>Amanah PropTech ist eine im Aufbau befindliche Tokenisierungs-Plattform, die gezielt europäische Core-Immobilien 
-      für hochvolumiges, islamisches Kapital (MENA-Region) strukturiert – ein BaFin-Konzept als Tied Agent ist in Vorbereitung.</p>
-      <p>Wir nutzen das Gesetz über elektronische Wertpapiere (eWpG), um die Asset-Klasse via Smart Contracts auf der Polygon-Blockchain in regulierte Krypto-Wertpapiere umzuwandeln.
-      Zusammen mit Tier-1 Verwaltern (wie CBRE, JLL) bauen wir jetzt in unserer Private-Beta-Phase strategische Partnerschaften auf, um unser €2,5 Milliarden AUM-Ziel zu erreichen.</p>
-      <ul>
-        <li>✅ Geplante 100% BaFin-Regulation & eWpG-Konformität (Polygon Emission)</li>
-        <li>✅ Zugang zu institutionellem Kapital aus dem Nahen Osten</li>
-        <li>✅ Digitale Strukturierung in dedizierte SPVs</li>
+      <p>institutionelles Kapital aus dem islamischen Raum sucht zunehmend nach effizienten Wegen in den deutschen Immobilienmarkt. Oft scheitert dies jedoch an fehlender Sharia-Konformität oder langwierigen SPV-Strukturen.</p>
+      <p>Mit <strong>Amanah PropTech</strong> entwickeln wir aktuell eine B2B-Technologieplattform, die als Brücke fungieren soll.</p>
+      <p>Unser Ziel ist der Aufbau eines Asset-Light Tech-Brokers, der perspektivisch Off-Market Core-Immobilien der DACH-Region an institutionelle Investoren vermittelt. Dabei fokussieren wir uns auf Sharia-konforme Abläufe und prüfen derzeit die Umsetzung unter dem deutschen eWpG-Rahmen (Gesetz über elektronische Wertpapiere).</p>
+      <p><strong>Aktueller Status (MVP / Pilotphase):</strong></p>
+      <p>Unsere Plattform und die damit verbundene Tokenisierungs-Infrastruktur befinden sich aktuell in der technologischen Evaluierung. Wir simulieren die Abwicklung von Immobilien-Anteilen, um in Zukunft gemeinsam mit regulierten BaFin-Partnern reibungslose White-Label-Transaktionen zu ermöglichen.</p>
+      <ul style="padding-left: 20px;">
+        <li>🔹 Konzipierung eines 100% zinsfreien (Riba-freien) Deal-Setups (Ijarah / Diminishing Musharakah)</li>
+        <li>🔹 Reduzierung rechtlicher Komplexität durch geplante eWpG-Strukturierung</li>
+        <li>🔹 Entwicklung eines institutionellen B2B SaaS-Dashboards (Private Beta)</li>
       </ul>
-      <p>Ich schlage ein kurzes 15-minütiges Onboarding-Gespräch vor, um eine mögliche Partnerschaft zu beleuchten:</p>
+      <p>Da wir aktuell unser institutionelles Netzwerk für zukünftige Partnerschaften aufbauen, würde ich mich sehr über Ihre Einschätzung aus Perspektive Ihres Hauses freuen.</p>
+      <p>Gerne stelle ich Ihnen unser Vorhaben in einem 15-minütigen Briefing kurz vor:</p>
     `;
 
   return `

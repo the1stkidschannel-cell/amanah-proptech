@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Amanah PropTech - Email Entwürfe zur Prüfung</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f0f0f0; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; padding: 30px; }
+    .page-title {
+      text-align: center; color: #03362a; font-size: 28px; font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .page-subtitle {
+      text-align: center; color: #888; font-size: 14px; margin-bottom: 40px;
+    }
+
+    /* Email mock container */
+    .email-mock {
+      max-width: 700px; margin: 0 auto 50px; background: #fff;
+      border-radius: 10px; overflow: hidden;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    /* Gmail-like toolbar */
+    .email-toolbar {
+      background: #f6f8fc; padding: 10px 20px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: #5f6368;
+    }
+    .toolbar-btn {
+      background: none; border: 1px solid #dadce0; border-radius: 4px;
+      padding: 4px 12px; cursor: default; font-size: 12px; color: #5f6368;
+    }
+
+    /* Email header */
+    .email-header {
+      padding: 20px 24px; border-bottom: 1px solid #f0f0f0;
+    }
+    .email-header .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .badge-mena { background: #03362a; color: #c5a059; }
+    .badge-dach { background: #1a1a2e; color: #e2b14c; }
+    .badge-correction { background: #8b0000; color: #ffd700; }
+
+    .email-subject {
+      font-size: 20px; font-weight: 600; color: #1a1a1a;
+      margin-bottom: 14px; line-height: 1.3;
+    }
+    .email-meta { font-size: 13px; color: #5f6368; line-height: 1.8; }
+    .email-meta strong { color: #3c4043; }
+
+    /* Email body */
+    .email-body {
+      padding: 0;
+    }
+
+    /* Separator between emails */
+    .email-separator {
+      max-width: 700px; margin: 0 auto 50px;
+      text-align: center; position: relative;
+    }
+    .email-separator::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0;
+      height: 1px; background: #ddd;
+    }
+    .email-separator span {
+      background: #f0f0f0; padding: 0 20px; position: relative;
+      color: #999; font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">📧 Amanah PropTech — E-Mail Entwürfe</h1>
+  <p class="page-subtitle">3 Varianten zur Prüfung · Stand: 09. April 2026</p>
+
+  <!-- ═══════════════ EMAIL 1: MENA FAMILY OFFICES ═══════════════ -->
+  <div class="email-mock">
+    <div class="email-toolbar">
+      <span class="toolbar-btn">↩ Reply</span>
+      <span class="toolbar-btn">↩↩ Reply All</span>
+      <span class="toolbar-btn">↗ Forward</span>
+      <span style="flex:1"></span>
+      <span style="color:#aaa; font-size:12px;">Draft · Entwurf 1 von 3</span>
+    </div>
+    <div class="email-header">
+      <span class="badge badge-mena">VARIANTE 1 · MENA FAMILY OFFICES</span>
+      <div class="email-subject">Islamic Finance: Zugang zu deutschem Immobilienmarkt via eWpG-Tokenisierung</div>
+      <div class="email-meta">
+        <strong>Von:</strong> Khoder Chaabou &lt;amanah.proptech@gmail.com&gt;<br>
+        <strong>An:</strong> [MENA Family Office Kontakt]<br>
+        <strong>Antwort an:</strong> chaakhod@proton.me
+      </div>
+    </div>
+    <div class="email-body">
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #1a1a1a; max-width: 600px; line-height: 1.6;">
+        <h2 style="color: #03362a; margin-bottom: 5px;">Amanah PropTech</h2>
+        <p style="font-size: 12px; color: #c5a059; font-weight: bold; letter-spacing: 1px; margin-top: 0;">INSTITUTIONAL PRIVATE BETA</p>
+        <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;" />
+        <p>Sehr geehrter Herr [Name],</p>
+
+        <p>institutionelles Kapital aus dem islamischen Raum sucht zunehmend nach Wegen in den deutschen Immobilienmarkt, scheitert jedoch oft am Fehlen Sharia-konformer Strukturen (Stichwort: Zinsansprüche in den Kapitalstrukturen) oder an hochkomplexen SPV-Gründungen.</p>
+        <p>Mit <strong>Amanah PropTech</strong> bauen wir aktuell eine spezialisierte B2B-Technologieplattform auf, die genau dieses Problem technologisch löst.</p>
+        <p>Wir arbeiten an einem Asset-Light Broker-Modell, das den direkten Zugang zu Off-Market Core-Immobilien (DACH) ermöglicht. Perspektivisch planen wir eine 100% Sharia-konforme Umsetzung (mittels Ijarah / Diminishing Musharakah Konstrukten), angebunden an das deutsche Gesetz über elektronische Wertpapiere (eWpG).</p>
+        <p>Derzeit befindet sich unsere Infrastruktur in der <strong>Pilotphase / MVP-Demonstration</strong>. Das bedeutet: Wir testen die Blockchain-Abwicklung (Kryptowertpapierregister) aktuell im simulierten Umfeld, um eine lückenlose, riba-freie Tokenisierung für unsere zukünftigen regulierten White-Label Partner aufzusetzen.</p>
+        <p><strong>Unsere Zielsetzung für den Marktstart:</strong></p>
+        <ul style="padding-left: 20px;">
+          <li>🔹 Vorbereitung zur Auflage tokenisierter, Sharia-konformer Core-Assets</li>
+          <li>🔹 Vermeidung teurer SPV-Mantelstrukturen durch direkten eWpG-Bezug</li>
+          <li>🔹 Bereitstellung eines institutionellen B2B SaaS-Dashboards zur simplen Portfolio-Kontrolle</li>
+        </ul>
+        <p>Wir befinden uns in einer frühen Aufbau- und Validierungsphase und sprechen derzeit exklusiv mit ausgewählten Family Offices über Anforderungen und zukünftige strategische Partnerschaften.</p>
+        <p>Ich würde Sie sehr gerne zu einem 15-minütigen strategischen Briefing einladen, um Ihnen unser Pilot-Projekt vorzustellen:</p>
+
+        <div style="margin: 35px 0;">
+          <a href="#" style="background: #111; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+            📅 Schedule 15-Min Briefing
+          </a>
+        </div>
+        <p style="font-size: 11px; color: #888; border-top: 1px solid #eee; padding-top: 15px;">
+          <strong>Khoder Chaabou</strong><br/>
+          Founder & CEO<br/>
+          Amanah PropTech<br/>
+          <em>For professional investors/partners only.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="email-separator"><span>Nächster Entwurf</span></div>
+
+  <!-- ═══════════════ EMAIL 2: DACH INSTITUTIONELLE ═══════════════ -->
+  <div class="email-mock">
+    <div class="email-toolbar">
+      <span class="toolbar-btn">↩ Reply</span>
+      <span class="toolbar-btn">↩↩ Reply All</span>
+      <span class="toolbar-btn">↗ Forward</span>
+      <span style="flex:1"></span>
+      <span style="color:#aaa; font-size:12px;">Draft · Entwurf 2 von 3</span>
+    </div>
+    <div class="email-header">
+      <span class="badge badge-dach">VARIANTE 2 · DACH INSTITUTIONELLE</span>
+      <div class="email-subject">Institutional Real Estate Tokenization (DACH) – Core Access für [Unternehmen]</div>
+      <div class="email-meta">
+        <strong>Von:</strong> Amanah PropTech &lt;amanah.proptech@gmail.com&gt;<br>
+        <strong>An:</strong> [DACH Institutioneller Kontakt]<br>
+        <strong>Antwort an:</strong> chaakhod@proton.me
+      </div>
+    </div>
+    <div class="email-body">
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #1a1a1a; max-width: 600px; line-height: 1.6;">
+        <h2 style="color: #03362a; margin-bottom: 5px;">Amanah PropTech</h2>
+        <p style="font-size: 12px; color: #c5a059; font-weight: bold; letter-spacing: 1px; margin-top: 0;">INSTITUTIONAL PRIVATE BETA</p>
+        <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;" />
+        <p>Sehr geehrter Herr [Name],</p>
+
+        <p>institutionelles Kapital aus dem islamischen Raum sucht zunehmend nach effizienten Wegen in den deutschen Immobilienmarkt. Oft scheitert dies jedoch an fehlender Sharia-Konformität oder langwierigen SPV-Strukturen.</p>
+        <p>Mit <strong>Amanah PropTech</strong> entwickeln wir aktuell eine B2B-Technologieplattform, die als Brücke fungieren soll.</p>
+        <p>Unser Ziel ist der Aufbau eines Asset-Light Tech-Brokers, der perspektivisch Off-Market Core-Immobilien der DACH-Region an institutionelle Investoren vermittelt. Dabei fokussieren wir uns auf Sharia-konforme Abläufe und prüfen derzeit die Umsetzung unter dem deutschen eWpG-Rahmen (Gesetz über elektronische Wertpapiere).</p>
+        <p><strong>Aktueller Status (MVP / Pilotphase):</strong></p>
+        <p>Unsere Plattform und die damit verbundene Tokenisierungs-Infrastruktur befinden sich aktuell in der technologischen Evaluierung. Wir simulieren die Abwicklung von Immobilien-Anteilen, um in Zukunft gemeinsam mit regulierten BaFin-Partnern reibungslose White-Label-Transaktionen zu ermöglichen.</p>
+        <ul style="padding-left: 20px;">
+          <li>🔹 Konzipierung eines 100% zinsfreien (Riba-freien) Deal-Setups (Ijarah / Diminishing Musharakah)</li>
+          <li>🔹 Reduzierung rechtlicher Komplexität durch geplante eWpG-Strukturierung</li>
+          <li>🔹 Entwicklung eines institutionellen B2B SaaS-Dashboards (Private Beta)</li>
+        </ul>
+        <p>Da wir aktuell unser institutionelles Netzwerk für zukünftige Partnerschaften aufbauen, würde ich mich sehr über Ihre Einschätzung aus Perspektive Ihres Hauses freuen.</p>
+        <p>Gerne stelle ich Ihnen unser Vorhaben in einem 15-minütigen Briefing kurz vor:</p>
+
+        <div style="margin: 35px 0;">
+          <a href="#" style="background: #111; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+            📅 Schedule 15-Min Briefing
+          </a>
+        </div>
+        <p style="font-size: 11px; color: #888; border-top: 1px solid #eee; padding-top: 15px;">
+          <strong>Khoder Chaabou</strong><br/>
+          Founder & CEO<br/>
+          Amanah PropTech<br/>
+          <em>For professional investors/partners only.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="email-separator"><span>Nächster Entwurf</span></div>
+
+  <!-- ═══════════════ EMAIL 3: CORRECTION / RICHTIGSTELLUNG ═══════════════ -->
+  <div class="email-mock">
+    <div class="email-toolbar">
+      <span class="toolbar-btn">↩ Reply</span>
+      <span class="toolbar-btn">↩↩ Reply All</span>
+      <span class="toolbar-btn">↗ Forward</span>
+      <span style="flex:1"></span>
+      <span style="color:#aaa; font-size:12px;">Draft · Entwurf 3 von 3</span>
+    </div>
+    <div class="email-header">
+      <span class="badge badge-correction">VARIANTE 3 · RICHTIGSTELLUNG / CORRECTION</span>
+      <div class="email-subject">Wichtige Richtigstellung: Amanah PropTech Compliance-Status</div>
+      <div class="email-meta">
+        <strong>Von:</strong> Khoder Chaabou &lt;amanah.proptech@gmail.com&gt;<br>
+        <strong>An:</strong> [Bereits kontaktierte Leads]<br>
+        <strong>Antwort an:</strong> chaakhod@proton.me
+      </div>
+    </div>
+    <div class="email-body">
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 30px; color: #1a1a1a; max-width: 600px; line-height: 1.6;">
+        <h2 style="color: #03362a; margin-bottom: 5px;">Amanah PropTech</h2>
+        <p style="font-size: 12px; color: #c5a059; font-weight: bold; letter-spacing: 1px; margin-top: 0;">CLARIFICATION & UPDATE</p>
+        <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;" />
+        <p>Sehr geehrter Herr [Name],</p>
+
+        <p>ich wende mich an Sie, um eine Richtigstellung bezüglich unserer vorherigen Nachricht zu Amanah PropTech vorzunehmen.</p>
+        <p>In einem technologischen Testlauf hat unser automatisiertes System Ihnen eine E-Mail zugestellt, in der fälschlicherweise behauptet wurde, wir seien eine "BaFin-regulierte Plattform" oder besäßen eine Haftungsdachstruktur (Tied-Agent). <strong>Diese Aussage war faktisch inkorrekt.</strong></p>
+        <p>Amanah PropTech befindet sich derzeit in einer <strong>frühen MVP-Phase (Minimum Viable Product).</strong> Wir verfügen aktuell über keine BaFin-Lizenz und erbringen keine lizenzpflichtigen Finanzdienstleistungen. Eine Struktur als vertraglich gebundener Vermittler (Tied Agent) ist lediglich in Planung.</p>
+        <p>Gerade als [Position] bei [Unternehmen] schätzen Sie Transparenz und strikte Compliance. Die zuvor erwähnten eWpG-Assets und Dashboards dienen als technologische Demonstration und illustrieren unseren geplanten Zielzustand.</p>
+        <p>Ich möchte mich für die Irritation entschuldigen, die durch diesen Fehler im automatisierten System entstanden ist.</p>
+        <p>Falls Sie dennoch Interesse haben, unseren technologischen Ansatz und unsere Roadmap für die digitale Strukturierung von Core-Immobilien kennenzulernen, stehe ich Ihnen gerne für ein Gespräch zur Verfügung.</p>
+
+        <div style="margin: 35px 0;">
+          <a href="#" style="background: #111; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+            📅 Schedule 15-Min Talk
+          </a>
+        </div>
+        <p style="font-size: 11px; color: #888; border-top: 1px solid #eee; padding-top: 15px;">
+          <strong>Khoder Chaabou</strong><br/>
+          Founder & CEO<br/>
+          Amanah PropTech<br/>
+          <em>MVP Status - No BaFin license. Technological demonstration only.</em>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

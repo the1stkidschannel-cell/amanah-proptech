@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     // Simulate connection to IDnow / SumSub / Jumio API for AML and PEP checks
     // In production, this would be a webhook listener receiving a payload from the KYC provider.
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
     // Simulated PEP (Politically Exposed Person) Sanction List Check
     // We mock a failure based on a specific name/nationality for demo purposes
@@ -31,10 +31,22 @@ export async function POST(request: Request) {
     }
 
     if (isPEP) {
+      // Human-in-the-Loop Email Trigger
+      try {
+        const { sendApprovalEmail } = await import("@/lib/email");
+        await sendApprovalEmail("kyc", userId, {
+          name: `${firstName} ${lastName}`,
+          nationality,
+          reason: "PEP or High-Risk setup flagged during B2B onboarding."
+        });
+      } catch (e) {
+        console.error("Failed to trigger HITL email", e);
+      }
+
       return NextResponse.json({
         success: true,
         status: 'MANUAL_REVIEW',
-        reason: 'Flagged as Politically Exposed Person (PEP). Requires manual BaFin compliance review.',
+        reason: 'Flagged as Politically Exposed / High-Risk (PEP). Requires manual AML/Compliance review.',
         pepFlag: true,
         timestamp: new Date().toISOString(),
       });
